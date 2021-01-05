@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Common.Game.Define.DelegateDefine;
 
 namespace Game.Common.Event
 {
@@ -9,7 +10,7 @@ namespace Game.Common.Event
     /// </summary>
     public class EventArgs
     {
-        public EventArgs (EventID id,EventCallBack callBack, object listener, EventOrderEnum order = EventOrderEnum.DEFAULT)
+        public EventArgs (EventID id, Void_Objects_Del callBack, object listener, EventOrderEnum order = EventOrderEnum.DEFAULT)
         {
             EventID = id;
             CallBack = callBack;
@@ -36,7 +37,7 @@ namespace Game.Common.Event
         /// <summary>
         /// 回调
         /// </summary>
-        public EventCallBack CallBack { get; private set; }
+        public Void_Objects_Del CallBack { get; private set; }
 
         /// <summary>
         /// 回调顺序
@@ -53,7 +54,7 @@ namespace Game.Common.Event
     /// <summary>
     /// event回调
     /// </summary>
-    public delegate void EventCallBack (object[] args);
+    //public delegate void EventCallBack (object[] args);
 
     /// <summary>
     /// 回调顺序
