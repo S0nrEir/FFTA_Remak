@@ -11,6 +11,10 @@ namespace Game.Common.UI
     {
         Test = 0,
 
+        /// <summary>
+        ///  初始UI
+        /// </summary>
+        StartUpUI,
 
 
         None = 999,
