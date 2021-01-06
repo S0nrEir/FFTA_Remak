@@ -21,8 +21,6 @@ namespace Game.Common.UI
                 Tools.Log.Error( "load faild:" + GetType().Name );
                 return;
             }
-
-
         }
 
         /// <summary>
@@ -36,6 +34,37 @@ namespace Game.Common.UI
 
         #region private methods
 
+        /// <summary>
+        /// 带Window的UI初始化
+        /// </summary>
+        public bool Init<T> (UIParam uiParam) where T:WindowBase
+        {
+            param = uiParam;
+            //根据path加载
+            var obj = Resources.Load<GameObject>( Path );
+            if (obj is null)
+                return false;
+
+            UIGameObject = obj;
+            UICanvas = UIGameObject.AddComponent<Canvas>();
+            UIGameObject.AddComponent<CanvasGroup>();
+            UICanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+
+            ResetTransform();
+
+            //处理Window的类型转换
+            var tWindow = UIGameObject.GetComponent<WindowBase>();
+            if (tWindow is null)
+                Window = null;
+            else
+                Window = tWindow as T;
+
+            return true;
+        }
+
+        /// <summary>
+        /// 不带Window的UI初始化
+        /// </summary>
         public bool Init (UIParam uiParam)
         {
             param = uiParam;
@@ -49,9 +78,27 @@ namespace Game.Common.UI
             UIGameObject.AddComponent<CanvasGroup>();
             UICanvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
-            UIGameObject.transform.localScale = new Vector3( 1, 1, 1);
+            ResetTransform();
+
+            Window = null;
 
             return true;
+        }
+
+        /// <summary>
+        /// 重设根Object的transform信息
+        /// </summary>
+        private void ResetTransform ()
+        {
+            if (UIGameObject is null)
+            {
+                Tools.Log.Error( "UIBase.ResetTransform--->UIGameObejct is null!" );
+                return;
+            }
+
+            var tran = UIGameObject.transform;
+            tran.localScale = new Vector3( 1, 1, 1 );
+            tran.eulerAngles = new Vector3( 0, 0, 0 );
         }
 
         #endregion
@@ -171,6 +218,11 @@ namespace Game.Common.UI
         /// 实例路径
         /// </summary>
         protected abstract string Path { get; }
+
+        /// <summary>
+        /// 窗口引用实例，任何对于Prefab元素/组件的操作都通过此字段实现
+        /// </summary>
+        protected WindowBase Window { get; private set; }
     }
 
     /// <summary>

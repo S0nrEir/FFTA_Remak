@@ -46,10 +46,11 @@ namespace Game.Common.UI
         /// <summary>
         /// 加载新UI
         /// </summary>
-        private static UIBase LoadUI<T> (UIIDEnum id, UIParam param = null) where T : UIBase, new()
+        private static UIBase LoadUI<T,W> (UIIDEnum id, UIParam param = null) where T : UIBase, new()//todo不觉得这传泛型的方式是一种好的处理方式
+                                                                              where W:WindowBase
         {
             var newUI = new T();
-            if (!newUI.Init( param ))
+            if (!newUI.Init<W>( param ))
                 return null;
 
             return newUI;
@@ -58,13 +59,14 @@ namespace Game.Common.UI
         /// <summary>
         /// 加载并显示一个UI实例
         /// </summary>
-        public static void ShowUI<T> (UIIDEnum uiID,UIParam param = null) where T : UIBase, new()
+        public static void ShowUI<T,W> (UIIDEnum uiID,UIParam param = null) where T : UIBase, new()
+                                                                            where W:WindowBase
         {
             //检查缓存队列里有没有已经打开的此类UI实例
             var ui = GetFromCache<T>( uiID );
             if (ui is null)//拿不到，加载新的
             {
-                ui = LoadUI<T>( uiID, param );
+                ui = LoadUI<T,W>( uiID, param );
                 if (ui is null)//todo这里处理的其实不太好
                 {
                     Tools.Log.Error("UIMgr--->faild to load ui:"+ typeof(T).Name);
@@ -99,9 +101,10 @@ namespace Game.Common.UI
         /// <summary>
         /// 加载并显示一个UI实例
         /// </summary>
-        public static void ShowUI<T> (int id, UIParam param = null) where T : UIBase, new()
+        public static void ShowUI<T,W> (int id, UIParam param = null) where T : UIBase, new()
+                                                                      where W:WindowBase
         {
-            ShowUI<T>( (UIIDEnum)id, param );
+            ShowUI<T,W>( (UIIDEnum)id, param );
         }
 
 
