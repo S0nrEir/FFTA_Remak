@@ -30,13 +30,13 @@ namespace Game.Common.UI
         /// </summary>
         public UIBase () 
         {
-            Tools.Log.Warnning("通过默认构造了一个UI实例");
+            //Tools.Log.Warnning("通过默认构造了一个UI实例");
         }
         #endregion
 
         #region private methods
 
-        private bool Init (UIParam uiParam)
+        public bool Init (UIParam uiParam)
         {
             param = uiParam;
             //根据path加载
@@ -49,24 +49,49 @@ namespace Game.Common.UI
             UIGameObject.AddComponent<CanvasGroup>();
             UICanvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
-
+            UIGameObject.transform.localScale = new Vector3( 1, 1, 1);
 
             return true;
         }
 
+        #endregion
+
+        #region public methods
+
+        /// <summary>
+        /// showUI
+        /// </summary>
+        public void Show ()
+        {
+            IsShowed = true;
+            UIGameObject.SetActive( true );
+            OnEnable();
+            OnShow();
+        }
+
+        /// <summary>
+        /// closeUI
+        /// </summary>
+        public void Close ()
+        {
+            IsShowed = false;
+            UIGameObject.SetActive( false );
+            OnDisable();
+            OnClose();
+        }
 
         #endregion
 
         #region sub class impl
 
-        protected virtual void OnLoad()
+        public virtual void OnLoad()
         {
 
         }
 
         protected virtual void OnEnable ()
         {
-            
+            RegisterEvent();
         }
 
         protected virtual void OnShow ()
@@ -74,14 +99,14 @@ namespace Game.Common.UI
             
         }
 
-        protected virtual void OnHide ()
+        protected virtual void OnClose ()
         {
             
         }
 
         protected virtual void OnDisable ()
         {
-            
+            UnRegisterEvent();
         }
 
         protected virtual void OnDestroy ()
@@ -89,9 +114,23 @@ namespace Game.Common.UI
             
         }
 
+        protected virtual void RegisterEvent ()
+        {
+            
+        }
+
+        protected virtual void UnRegisterEvent ()
+        {
+            
+        }
 
 
         #endregion
+
+        /// <summary>
+        /// 触发后是否隐藏前一个UI实例
+        /// </summary>
+        public virtual bool IsHidePrevious { get; }
 
         /// <summary>
         /// 是否显示
@@ -101,12 +140,12 @@ namespace Game.Common.UI
         /// <summary>
         /// 参数
         /// </summary>
-        protected UIParam param;
+        public UIParam param { get; private set; }
 
         /// <summary>
         /// UI实例唯一ID
         /// </summary>
-        protected UIIDEnum ID { get; }
+        public UIIDEnum ID { get; }
 
         /// <summary>
         /// canvas对象
