@@ -13,7 +13,7 @@ namespace Game.Common.Event
         /// <summary>
         /// 触发事件
         /// </summary>
-        public void FireEvent (EventID id,object[] args)
+        public void FireEvent (EventID id,object[] args = null)
         {
             if (!_eventDic.TryGetValue( id, out var lst ))
             {
