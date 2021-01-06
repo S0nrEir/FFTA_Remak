@@ -91,6 +91,9 @@ namespace Game.Common.UI
         /// </summary>
         private static void CheckClosePrevUI (UIBase prevUI,UIBase currUI)
         {
+            if (currUI is null)
+                return;
+
             if (!currUI.IsHidePrevious)
                 return;
 
