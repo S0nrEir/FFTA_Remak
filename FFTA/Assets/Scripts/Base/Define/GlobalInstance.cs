@@ -9,7 +9,7 @@ namespace Game.Common.Define
     /// <summary>
     /// 游戏全局Object实例类
     /// </summary>
-    public class GloablInstance
+    public class GlobalInstance
     {
         #region UIRoot
         private static GameObject _uiRoot = null;
