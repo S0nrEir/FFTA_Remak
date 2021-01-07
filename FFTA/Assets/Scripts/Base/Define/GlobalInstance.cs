@@ -59,8 +59,8 @@ namespace Game.Common.Define
         {
             get
             {
-                if (_normalUIRoot is null)
-                    _uiRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "GuideLayer" );
+                if (_guideUIRoot is null)
+                    _guideUIRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "GuideLayer" );
                 
                 return _uiRoot;
             }
