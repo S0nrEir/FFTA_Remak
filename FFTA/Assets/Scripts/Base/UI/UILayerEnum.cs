@@ -18,5 +18,7 @@ namespace Game.Common.UI
         /// 引导层
         /// </summary>
         Guide = 5,
+
+        Default = 999,
     }
 }

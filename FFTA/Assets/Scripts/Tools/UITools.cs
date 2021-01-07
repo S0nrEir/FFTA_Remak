@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Game.Common.Define;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,29 @@ namespace Game.Common.Tools
     /// </summary>
     public class UITools
     {
+        /// <summary>
+        /// 设置UI实例到指定的UI节点下
+        /// </summary>
+        public static void SetToUIRoot (UI.UIBase ui)
+        {
+            var tran = ui.UITransform;
+            switch (ui.Layer)
+            {
+                case UI.UILayerEnum.Normal:
+                    tran.SetParent( GlobalInstance.NormalUIlLayer.transform );
+                    break;
+                case UI.UILayerEnum.Guide:
+                    tran.SetParent( GlobalInstance.GuideUILayer.transform );
+                    break;
+                default:
+                    tran.SetParent( GlobalInstance.UIRoot.transform );
+                    break;
+            }
+
+            tran.localScale = Vector3.one;
+            tran.localPosition = Vector3.zero;
+        }
+
         /// <summary>
         /// 根据路径拿到gameObject上相应的组件，拿不到返回NULL
         /// </summary>

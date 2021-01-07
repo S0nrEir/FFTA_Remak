@@ -28,6 +28,7 @@ namespace Game.Common.UI
         /// </summary>
         public UIBase () 
         {
+            Tools.Log.Info("UIBase constructed:" + GetType().Name);
             //Tools.Log.Warnning("通过默认构造了一个UI实例");
         }
         #endregion
@@ -50,6 +51,9 @@ namespace Game.Common.UI
             UIGameObject.AddComponent<CanvasGroup>();
             UICanvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
+            //set UI name:
+            UIGameObject.name = ID.ToString();
+
             ResetTransform();
 
             //处理Window的类型转换
@@ -58,8 +62,6 @@ namespace Game.Common.UI
                 Window = null;
             else
                 Window = tWindow as T;
-
-
 
             return true;
         }
@@ -210,6 +212,11 @@ namespace Game.Common.UI
         /// 实例gameObject对象
         /// </summary>
         protected GameObject UIGameObject { get; private set; }
+
+        /// <summary>
+        /// Transform组件
+        /// </summary>
+        public Transform UITransform => UIGameObject.transform;
 
         /// <summary>
         /// 是否需要每帧更新

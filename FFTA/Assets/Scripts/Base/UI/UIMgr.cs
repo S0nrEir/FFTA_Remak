@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Game.Common.Tools;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ namespace Game.Common.UI
         /// 加载新UI
         /// </summary>
         private static UIBase LoadUI<T, W> (UIIDEnum id, UIParam param = null) where T : UIBase, new()//todo不觉得这传泛型的方式是一种好的处理方式
-                                                                              where W : WindowBase
+                                                                               where W : WindowBase
         {
             var newUI = new T();
             if (!newUI.Init<W>( param ))
@@ -96,7 +97,7 @@ namespace Game.Common.UI
                 Tools.Log.Error( "UIMgr--->faild to load ui:" + typeof( T ).Name );
                 return;
             }
-
+            UITools.SetToUIRoot( ui );
             CheckClosePrevUI( _uiPool.Peek(), ui );
 
             _uiPool.Enqueue( ui );
@@ -127,8 +128,6 @@ namespace Game.Common.UI
             //    ui.Show();
             #endregion
         }
-
-
 
         /// <summary>
         /// 加载并显示一个UI实例
