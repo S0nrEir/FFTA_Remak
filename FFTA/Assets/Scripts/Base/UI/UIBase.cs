@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Common.Game.Define.DelegateDefine;
+using static Game.Common.Define.DelegateDefine;
 
 namespace Game.Common.UI
 {
@@ -16,7 +16,7 @@ namespace Game.Common.UI
         /// </summary>
         public UIBase (UIParam param)
         {
-            if (!Init(param))
+            if (!Init( param ))
             {
                 Tools.Log.Error( "load faild:" + GetType().Name );
                 return;
@@ -58,6 +58,8 @@ namespace Game.Common.UI
                 Window = null;
             else
                 Window = tWindow as T;
+
+
 
             return true;
         }
@@ -175,6 +177,11 @@ namespace Game.Common.UI
         #endregion
 
         /// <summary>
+        /// UI层级
+        /// </summary>
+        public virtual UILayerEnum Layer { get; } = UILayerEnum.Normal;
+
+        /// <summary>
         /// 触发后是否隐藏前一个UI实例
         /// </summary>
         public virtual bool IsHidePrevious { get; }
@@ -217,12 +224,12 @@ namespace Game.Common.UI
         /// <summary>
         /// 实例路径
         /// </summary>
-        protected abstract string Path { get; }
+        protected abstract string Path { get; } 
 
         /// <summary>
         /// 窗口引用实例，任何对于Prefab元素/组件的操作都通过此字段实现
         /// </summary>
-        protected WindowBase Window { get; private set; }
+        protected WindowBase Window { get; private set; } = null;
     }
 
     /// <summary>
