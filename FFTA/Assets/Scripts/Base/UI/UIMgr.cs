@@ -138,5 +138,23 @@ namespace Game.Common.UI
             ShowUI<T,W>( (UIIDEnum)id, param );
         }
         #endregion
+
+        #region public
+
+        /// <summary>
+        /// 获取正在显示中的UI，拿不到返回NULL
+        /// </summary>
+        public static T GetShowingUI<T> (UIIDEnum id) where T : UIBase
+        {
+            if (!_refDic.TryGetValue( id, out var ui ))
+                return null;
+
+            if (!ui.IsShowed)
+                return null;
+
+            return null;
+        }
+
+        #endregion
     }
 }

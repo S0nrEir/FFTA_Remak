@@ -16,6 +16,30 @@ namespace Game.Common.UI
         /// </summary>
         StartUpUI,
 
+        /// <summary>
+        /// 存储
+        /// </summary>
+        SaveAndLoadUI,
+
+        /// <summary>
+        /// 任务板
+        /// </summary>
+        MissionBoardUI,
+
+        /// <summary>
+        /// 队伍概览
+        /// </summary>
+        TeamOverViewUI,
+
+        /// <summary>
+        /// 角色详情
+        /// </summary>
+        CharacterDetailUI,
+
+        /// <summary>
+        /// 购买/出售
+        /// </summary>
+        BuyAndSaleUI,
 
         None = 999,
     }

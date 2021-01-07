@@ -6,7 +6,7 @@ using static Game.Common.Define.DelegateDefine;
 namespace Game.Common.UI
 {
     /// <summary>
-    /// UI的基类，所有UI实例继承于此
+    /// UI的基类，所有UI实例继承于此，对于所有UI，禁止使用单例
     /// </summary>
     public abstract class UIBase
     {
