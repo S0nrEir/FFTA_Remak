@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Common.Game.Define.DelegateDefine;
+using static Game.Common.Define.DelegateDefine;
 
 namespace Game.Common.UI
 {
     /// <summary>
-    /// UI的基类，所有UI实例继承于此
+    /// UI的基类，所有UI实例继承于此，对于所有UI，禁止使用单例
     /// </summary>
     public abstract class UIBase
     {
@@ -16,7 +16,7 @@ namespace Game.Common.UI
         /// </summary>
         public UIBase (UIParam param)
         {
-            if (!Init(param))
+            if (!Init( param ))
             {
                 Tools.Log.Error( "load faild:" + GetType().Name );
                 return;
@@ -28,6 +28,7 @@ namespace Game.Common.UI
         /// </summary>
         public UIBase () 
         {
+            Tools.Log.Info("UIBase constructed:" + GetType().Name);
             //Tools.Log.Warnning("通过默认构造了一个UI实例");
         }
         #endregion
@@ -49,6 +50,9 @@ namespace Game.Common.UI
             UICanvas = UIGameObject.AddComponent<Canvas>();
             UIGameObject.AddComponent<CanvasGroup>();
             UICanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+
+            //set UI name:
+            UIGameObject.name = ID.ToString();
 
             ResetTransform();
 
@@ -175,6 +179,11 @@ namespace Game.Common.UI
         #endregion
 
         /// <summary>
+        /// UI层级
+        /// </summary>
+        public virtual UILayerEnum Layer { get; } = UILayerEnum.Normal;
+
+        /// <summary>
         /// 触发后是否隐藏前一个UI实例
         /// </summary>
         public virtual bool IsHidePrevious { get; }
@@ -205,6 +214,11 @@ namespace Game.Common.UI
         protected GameObject UIGameObject { get; private set; }
 
         /// <summary>
+        /// Transform组件
+        /// </summary>
+        public Transform UITransform => UIGameObject.transform;
+
+        /// <summary>
         /// 是否需要每帧更新
         /// </summary>
         protected virtual bool IsUseUpdate { get; }
@@ -217,12 +231,12 @@ namespace Game.Common.UI
         /// <summary>
         /// 实例路径
         /// </summary>
-        protected abstract string Path { get; }
+        protected abstract string Path { get; } 
 
         /// <summary>
         /// 窗口引用实例，任何对于Prefab元素/组件的操作都通过此字段实现
         /// </summary>
-        protected WindowBase Window { get; private set; }
+        protected WindowBase Window { get; private set; } = null;
     }
 
     /// <summary>

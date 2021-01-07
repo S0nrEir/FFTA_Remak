@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FantasyGUI
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 1
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 2
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 1024
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 8
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: c9c704b38104a9047b13cd4b897f8dc4, type: 3}
+    totalSpriteSurfaceArea: 234624
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: c8c8c670367bf7e489243b843eeef521, type: 3}
+  - {fileID: 21300000, guid: 6b7f50f0c25eead429284cd00c8c43fd, type: 3}
+  - {fileID: 21300000, guid: 479eafb2543431043a8ee390637ac0f7, type: 3}
+  - {fileID: 21300000, guid: 70c500e3f9a702743946d084c36b42c6, type: 3}
+  - {fileID: 21300000, guid: 4e919d44466f0624191cd947ff906d2a, type: 3}
+  - {fileID: 21300000, guid: 02e21a7595645644e80f34c809e010e9, type: 3}
+  - {fileID: 21300000, guid: f42791169da3c0149ad7d455c24026ef, type: 3}
+  - {fileID: 21300000, guid: 92a4fb96206097047a300ebace4278a1, type: 3}
+  - {fileID: 21300000, guid: 03435f376320d0e418058b601acc79fd, type: 3}
+  - {fileID: 21300000, guid: 2927e1d7d646af8459f2898fc4fce62b, type: 3}
+  - {fileID: 21300000, guid: 26d2e70834704ab4caaa1bcabebb3873, type: 3}
+  - {fileID: 21300000, guid: ea4a9c4889157964ea64778839d97680, type: 3}
+  - {fileID: 21300000, guid: f07e17d8dc5732646b3ec49fce870411, type: 3}
+  - {fileID: 21300000, guid: ae7e1099aaff73c4b8e6e623e8c96910, type: 3}
+  - {fileID: 21300000, guid: 78ee397acef927a439f9c6db499a7d33, type: 3}
+  - {fileID: 21300000, guid: 391f97da05cf45240a8ecdec752cd9be, type: 3}
+  - {fileID: 21300000, guid: 0d17ab7bbdf3dc544b7e132df546fa81, type: 3}
+  - {fileID: 21300000, guid: 0b3d25bb30efc5847954849ba0b1453d, type: 3}
+  - {fileID: 21300000, guid: 6d49331c7dc06794f98d4a1c17790d0b, type: 3}
+  - {fileID: 21300000, guid: a1bad59df67816b4e87ffbadf3753955, type: 3}
+  - {fileID: 21300000, guid: 7788578edcc370145ae5156b7d9370f9, type: 3}
+  - {fileID: 21300000, guid: 45ff5a9f5ffb13c48a6d5b706cdf0e53, type: 3}
+  - {fileID: 21300000, guid: c7af4caf86986a24d89b41c984aa68d3, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Progress_Slot
+  - Blue_Ribbon
+  - Minus_Icon
+  - Inventory_Slot
+  - Nickname_Slot
+  - Violet_Ribbon
+  - Red_Ribbon
+  - Reward_Slot
+  - Eq_Slot
+  - Health
+  - Button
+  - Plus_Icon
+  - Character_Box
+  - Crystal_Icon
+  - Mana
+  - Accept_Icon
+  - HealthMana_Cover
+  - Close_Icon
+  - Comleted_Icon
+  - ButtonShadow
+  - Player_Frame
+  - Coin_Icon
+  - Money_Bar
+  m_Tag: FantasyGUI
+  m_IsVariant: 0

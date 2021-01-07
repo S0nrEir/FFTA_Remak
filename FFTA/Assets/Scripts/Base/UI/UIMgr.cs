@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Game.Common.Tools;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +20,35 @@ namespace Game.Common.UI
         /// </summary>
         private static Dictionary<UIIDEnum, UIBase> _refDic = new Dictionary<UIIDEnum, UIBase>();
 
+        /// <summary>
+        /// 加载新UI
+        /// </summary>
+        private static UIBase LoadUI<T, W> (UIIDEnum id, UIParam param = null) where T : UIBase, new()//todo不觉得这传泛型的方式是一种好的处理方式
+                                                                               where W : WindowBase
+        {
+            var newUI = new T();
+            if (!newUI.Init<W>( param ))
+                return null;
+
+            return newUI;
+        }
+
+        /// <summary>
+        /// 检查是否需要关闭前一级UI
+        /// </summary>
+        private static void CheckClosePrevUI (UIBase prevUI, UIBase currUI)
+        {
+            if (currUI is null)
+                return;
+
+            if (!currUI.IsHidePrevious)
+                return;
+
+            if (!ReferenceEquals( null, prevUI ))
+                prevUI.Close();
+        }
+
+        #region getFromCache
         /// <summary>
         /// 从缓存队列中获取指定的UI实例，如果没有返回null
         /// </summary>
@@ -42,20 +72,9 @@ namespace Game.Common.UI
 
             return null;
         }
+        #endregion
 
-        /// <summary>
-        /// 加载新UI
-        /// </summary>
-        private static UIBase LoadUI<T,W> (UIIDEnum id, UIParam param = null) where T : UIBase, new()//todo不觉得这传泛型的方式是一种好的处理方式
-                                                                              where W:WindowBase
-        {
-            var newUI = new T();
-            if (!newUI.Init<W>( param ))
-                return null;
-
-            return newUI;
-        }
-
+        #region show
         /// <summary>
         /// 加载并显示一个UI实例
         /// </summary>
@@ -64,41 +83,50 @@ namespace Game.Common.UI
         {
             //检查缓存队列里有没有已经打开的此类UI实例
             var ui = GetFromCache<T>( uiID );
-            if (ui is null)//拿不到，加载新的
+            if (!ReferenceEquals( null, ui ))
             {
-                ui = LoadUI<T,W>( uiID, param );
-                if (ui is null)//todo这里处理的其实不太好
-                {
-                    Tools.Log.Error("UIMgr--->faild to load ui:"+ typeof(T).Name);
-                    return;
-                }
-
                 CheckClosePrevUI( _uiPool.Peek(), ui );
-
-                _uiPool.Enqueue( ui );
-                _refDic.Add( uiID, ui );
-
-                ui.OnLoad();
                 ui.Show();
+                return;
             }
-            else//能拿到，直接显示
-                ui.Show();
 
-        }
-
-        /// <summary>
-        /// 检查是否需要关闭前一级UI
-        /// </summary>
-        private static void CheckClosePrevUI (UIBase prevUI,UIBase currUI)
-        {
-            if (currUI is null)
+            //if ui entity is null:
+            ui = LoadUI<T, W>( uiID, param );
+            if (ui is null)//todo这里处理的其实不太好，尝试加载UI失败
+            {
+                Tools.Log.Error( "UIMgr--->faild to load ui:" + typeof( T ).Name );
                 return;
+            }
+            UITools.SetToUIRoot( ui );
+            CheckClosePrevUI( _uiPool.Peek(), ui );
 
-            if (!currUI.IsHidePrevious)
-                return;
+            _uiPool.Enqueue( ui );
+            _refDic.Add( uiID, ui );
 
-            if (!ReferenceEquals( null, prevUI ))
-                prevUI.Close();
+            ui.OnLoad();
+            ui.Show();
+
+            #region nouse
+            //if (ui is null)//拿不到，加载新的
+            //{
+            //    ui = LoadUI<T,W>( uiID, param );
+            //    if (ui is null)//todo这里处理的其实不太好
+            //    {
+            //        Tools.Log.Error("UIMgr--->faild to load ui:"+ typeof(T).Name);
+            //        return;
+            //    }
+
+            //    CheckClosePrevUI( _uiPool.Peek(), ui );
+
+            //    _uiPool.Enqueue( ui );
+            //    _refDic.Add( uiID, ui );
+
+            //    ui.OnLoad();
+            //    ui.Show();
+            //}
+            //else//能拿到，直接显示
+            //    ui.Show();
+            #endregion
         }
 
         /// <summary>
@@ -109,7 +137,24 @@ namespace Game.Common.UI
         {
             ShowUI<T,W>( (UIIDEnum)id, param );
         }
+        #endregion
 
+        #region public
 
+        /// <summary>
+        /// 获取正在显示中的UI，拿不到返回NULL
+        /// </summary>
+        public static T GetShowingUI<T> (UIIDEnum id) where T : UIBase
+        {
+            if (!_refDic.TryGetValue( id, out var ui ))
+                return null;
+
+            if (!ui.IsShowed)
+                return null;
+
+            return null;
+        }
+
+        #endregion
     }
 }

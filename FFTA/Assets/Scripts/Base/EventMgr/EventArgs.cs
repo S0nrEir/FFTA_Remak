@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Common.Game.Define.DelegateDefine;
+using static Game.Common.Define.DelegateDefine;
 
 namespace Game.Common.Event
 {
