@@ -74,6 +74,33 @@ namespace Game.Common.UI
         }
         #endregion
 
+        #region close
+
+        /// <summary>
+        /// 关闭UI，关闭后进入
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="uiID"></param>
+        public static void Close<T> (UIIDEnum uiID) where T : UIBase
+        {
+            if (!_refDic.TryGetValue( uiID, out var ui ))
+            {
+                Log.Error("faild to close ui,id:"+uiID.ToString());
+                return;
+            }
+
+            //队尾元素如果等于要关闭的UI，则出队该元素
+            var queueUI = _uiPool.Peek();
+            if (queueUI.GetType() == typeof( T ) && queueUI.ID == uiID)
+                _uiPool.Dequeue();
+
+
+
+            ui.Close();
+        }
+
+        #endregion
+
         #region show
         /// <summary>
         /// 加载并显示一个UI实例
