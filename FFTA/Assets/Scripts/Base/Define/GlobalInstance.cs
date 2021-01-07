@@ -11,6 +11,59 @@ namespace Game.Common.Define
     /// </summary>
     public class GlobalInstance
     {
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public static void Init ()
+        {
+            //MainCamera
+            var mainCamGo = GameObject.Find("Main_Camera");
+            _mainCamera = mainCamGo.GetComponent<Camera>();
+
+            //UIRoot
+            _uiRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "UIRoot" );
+            _guideUIRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "GuideLayer" );
+            _normalUIRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "NormalLayer" );
+
+            //hold all
+            DontDestroyOnLoad
+                (
+                    mainCamGo,
+                    _uiRoot,
+                    _guideUIRoot,
+                    _normalUIRoot
+                );
+        }
+
+        private static void DontDestroyOnLoad (params GameObject[] gos)
+        {
+            foreach (var go in gos)
+                GameObject.DontDestroyOnLoad( go );
+        }
+
+        #region camera
+
+        private static Camera _mainCamera = null;
+
+        /// <summary>
+        /// 主相机，场景相机
+        /// </summary>
+        public static Camera MainCamera
+        {
+            get
+            {
+                if (_mainCamera is null)
+                {
+                    var go = GameObject.Find( "Main_Camera" );
+                    _mainCamera = go.GetComponent<Camera>();
+                    GameObject.DontDestroyOnLoad( go );
+                }
+                return _mainCamera;
+            }
+        }
+
+        #endregion
+
         #region UIRoot
         private static GameObject _uiRoot = null;
 
@@ -43,7 +96,7 @@ namespace Game.Common.Define
             {
                 if (_normalUIRoot is null)
                 {
-                    _uiRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "NormalLayer" );
+                    _normalUIRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "NormalLayer" );
                     //GameObject.DontDestroyOnLoad( _uiRoot );
                 }
                 return _uiRoot;
