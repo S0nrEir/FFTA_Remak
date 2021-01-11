@@ -13,6 +13,11 @@ namespace Game.Common.UI
         /// 界面ID，ID和实例类型对应
         /// </summary>
         [SerializeField] private UIIDEnum _uiID = UIIDEnum.None;
+        
+        /// <summary>
+        /// 根节点
+        /// </summary>
+        [SerializeField] private GameObject _root;
 
         /// <summary>
         /// 获取该Window对应的UIID

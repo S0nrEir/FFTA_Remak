@@ -137,7 +137,8 @@ namespace Game.Common.UI
 
         public virtual void OnLoad()
         {
-
+            if (Window is null)
+                Tools.Log.Warnning("UI " + UIGameObject.name + "dosent have window sub class");
         }
 
         protected virtual void OnEnable ()

@@ -19,13 +19,13 @@ namespace Game.Common.Tools
             switch (ui.Layer)
             {
                 case UI.UILayerEnum.Normal:
-                    tran.SetParent( GlobalInstance.NormalUIlLayer.transform );
+                    tran.SetParent( GlobalInstance.NormalUILayer );
                     break;
                 case UI.UILayerEnum.Guide:
-                    tran.SetParent( GlobalInstance.GuideUILayer.transform );
+                    tran.SetParent( GlobalInstance.GuideUILayer );
                     break;
                 default:
-                    tran.SetParent( GlobalInstance.UIRoot.transform );
+                    tran.SetParent( GlobalInstance.UIRoot );
                     break;
             }
 
