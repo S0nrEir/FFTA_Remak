@@ -28,8 +28,11 @@ namespace TableConverter
             }
 
             //2、读Public下的所有Excel并生成tsv之Assets\Res\Config下，原文件直接覆盖
+            DirectoryInfo dirInfo = new DirectoryInfo( tableDirectory );
+            FileInfo[] files = dirInfo.GetFiles();
 
-
+            foreach (var file in files)
+                Tools.LoadExcel( tableDirectory + @"\" + file.Name );
 
             Console.ReadKey();
         }
