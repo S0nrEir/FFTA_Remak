@@ -9,8 +9,16 @@ namespace TableConverter
 {
     class Program
     {
+
+
         static void Main (string[] args)
         {
+            var local = System.Environment.CurrentDirectory;
+            var rootPath = local.Substring(0, local.IndexOf( @"\Tables" ) );
+            Console.WriteLine( rootPath );
+            Console.ReadKey();
+
+            return;
             //Console.WriteLine(System.Environment.CurrentDirectory);
             //Console.WriteLine( System.Environment.SystemDirectory );
 
@@ -28,8 +36,11 @@ namespace TableConverter
             }
 
             //2、读Public下的所有Excel并生成tsv之Assets\Res\Config下，原文件直接覆盖
+            DirectoryInfo dirInfo = new DirectoryInfo( tableDirectory );
+            FileInfo[] files = dirInfo.GetFiles();
 
-
+            foreach (var file in files)
+                Tools.LoadExcel( tableDirectory + @"\" + file.Name );
 
             Console.ReadKey();
         }

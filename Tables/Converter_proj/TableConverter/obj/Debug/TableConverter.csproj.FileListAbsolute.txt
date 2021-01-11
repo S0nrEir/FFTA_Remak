@@ -5,3 +5,7 @@ E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\Ta
 E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.exe
 E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.pdb
 E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.csprojAssemblyReference.cache
+E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\ExcelDataReader.dll
+E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\ExcelDataReader.pdb
+E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\ExcelDataReader.xml
+E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.csproj.CopyComplete
