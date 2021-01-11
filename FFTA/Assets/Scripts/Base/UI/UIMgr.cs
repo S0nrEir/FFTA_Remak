@@ -119,6 +119,7 @@ namespace Game.Common.UI
 
             //if ui entity is null:
             ui = LoadUI<T, W>( uiID, param );
+            //#UIMgr尝试加载UI失败的处理
             if (ui is null)//todo这里处理的其实不太好，尝试加载UI失败
             {
                 Tools.Log.Error( "UIMgr--->faild to load ui:" + typeof( T ).Name );
