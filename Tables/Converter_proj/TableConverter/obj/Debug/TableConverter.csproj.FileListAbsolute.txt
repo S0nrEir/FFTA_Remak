@@ -1,0 +1,7 @@
+E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\TableConverter.exe.config
+E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\TableConverter.exe
+E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\TableConverter.pdb
+E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.csproj.CoreCompileInputs.cache
+E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.exe
+E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.pdb
+E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.csprojAssemblyReference.cache
