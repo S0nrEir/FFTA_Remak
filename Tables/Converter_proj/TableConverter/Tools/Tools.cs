@@ -55,6 +55,26 @@ namespace TableConverter
 
                 }
             }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 将单表数据生成csv并进行一次flush至config目录下
+        /// </summary>
+        private static void FlushData ()
+        {
+            
+        }
+
+
+
+        /// <summary>
+        ///  获取config目录路径
+        /// </summary>
+        public static string GetConfigPath ()
+        {
+            return string.Empty;
         }
     }
 }

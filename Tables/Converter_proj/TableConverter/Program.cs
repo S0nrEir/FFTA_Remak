@@ -9,8 +9,16 @@ namespace TableConverter
 {
     class Program
     {
+
+
         static void Main (string[] args)
         {
+            var local = System.Environment.CurrentDirectory;
+            var rootPath = local.Substring(0, local.IndexOf( @"\Tables" ) );
+            Console.WriteLine( rootPath );
+            Console.ReadKey();
+
+            return;
             //Console.WriteLine(System.Environment.CurrentDirectory);
             //Console.WriteLine( System.Environment.SystemDirectory );
 
