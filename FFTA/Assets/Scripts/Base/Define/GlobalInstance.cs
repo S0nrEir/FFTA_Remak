@@ -20,6 +20,10 @@ namespace Game.Common.Define
             var mainCamGo = GameObject.Find("Main_Camera");
             _mainCamera = mainCamGo.GetComponent<Camera>();
 
+            //uiCamera
+            var uiCamGo = GameObject.Find("UI_Camra");
+            _uiCamera = uiCamGo.GetComponent<Camera>();
+
             //UIRoot
             _uiRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "UIRoot" );
             _guideUIRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "GuideLayer" );
@@ -28,6 +32,7 @@ namespace Game.Common.Define
             //hold all
             DontDestroyOnLoad
                 (
+                    uiCamGo,
                     mainCamGo,
                     _uiRoot,
                     _guideUIRoot,
@@ -35,6 +40,9 @@ namespace Game.Common.Define
                 );
         }
 
+        /// <summary>
+        /// 保留gameObject
+        /// </summary>
         private static void DontDestroyOnLoad (params GameObject[] gos)
         {
             foreach (var go in gos)
@@ -43,6 +51,31 @@ namespace Game.Common.Define
 
         #region camera
 
+        /// <summary>
+        /// UI相机
+        /// </summary>
+        private static Camera _uiCamera = null;
+
+        /// <summary>
+        /// UI相机
+        /// </summary>
+        private static Camera UICamera
+        {
+            get
+            {
+                if (_uiCamera is null)
+                {
+                    var go = GameObject.Find("UI_Camera");
+                    _uiCamera = go.GetComponent<Camera>();
+                    GameObject.DontDestroyOnLoad( _uiCamera );
+                }
+                return _uiCamera;
+            }
+        }
+
+        /// <summary>
+        /// 主相机，场景相机
+        /// </summary>
         private static Camera _mainCamera = null;
 
         /// <summary>
