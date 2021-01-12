@@ -15,13 +15,14 @@ namespace TableConverter
         {
             var local = System.Environment.CurrentDirectory;
             var rootPath = local.Substring(0, local.IndexOf( @"\Tables" ) );
+            rootPath = string.Format( @"{0}\FFTA\Assets\Res\Config", rootPath );
             Console.WriteLine( rootPath );
             Console.ReadKey();
 
-            return;
-            //Console.WriteLine(System.Environment.CurrentDirectory);
-            //Console.WriteLine( System.Environment.SystemDirectory );
 
+            return;
+            //-----------------------TEST--------------------------
+            
             //1、获取同目录下表路径配置文件（FFTA_Remake/Tables），获取不到则新建，路径指向Tables/Public文件夹
 
             var localPath = System.Environment.CurrentDirectory;
