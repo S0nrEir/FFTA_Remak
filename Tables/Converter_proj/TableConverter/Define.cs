@@ -9,14 +9,10 @@ namespace TableConverter
 {
     public class Define
     {
-
-        /// <summary>
-        /// UnityConfig目录
-        /// </summary>
         private static string _configPath = string.Empty;
 
         /// <summary>
-        /// UnityConfig目录
+        /// FFTA_Remak\FFTA\Assets\Res\Config
         /// </summary>
         public static string ConfigPath
         {
@@ -24,14 +20,12 @@ namespace TableConverter
             {
                 if (string.IsNullOrEmpty( ConfigPath ))
                 {
-                    //todo 这里写死
+                    //#todo这里写死
                     var env = System.Environment.CurrentDirectory;
-                    var rootPath = env.Substring( env.Length - env.IndexOf( "Tables" ) );
-                    using (var fs = new FileStream( "" ,FileMode.Open,FileAccess.Read))
-                    {
-                        
-                    }
-
+                    //FFTA\FFTA_Remake\FFTA_Remak
+                    var rootPath = env.Substring( 0, System.Environment.CurrentDirectory.IndexOf( @"\Tables" ) );
+                    rootPath = string.Format( @"{0}\FFTA\Assets\Res\Config",rootPath );
+                    _configPath = rootPath;
                 }
 
                 return _configPath;
