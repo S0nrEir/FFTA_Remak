@@ -75,33 +75,41 @@ namespace TableConverter
                     var rowCursor = table.Rows[currRow];//当前行
                     for (int currCol = 0; currCol < colCount; currCol++)
                     {
+                        //第一行，处理字段名
                         if (currRow == 0)
+                        {
+                            var fieldName = rowCursor[currCol] as string;
+                            if (string.IsNullOrEmpty( fieldName ))
+                                return false;
+                            
+                            builder.Append( fieldName );
+                            AppendComma( builder, currCol, colCount );
+                        }
+                        //第二行处理类型
+                        else if (currRow == 1)
                         {
                             var typ = GetFieldType( rowCursor[currCol] );
                             if (string.IsNullOrEmpty( typ ))
                             {
-                                Console.WriteLine(string.Format("表{0}，行{1}列{2}类型错误"));
+                                Console.WriteLine( string.Format( "表{0}，行{1}列{2}类型错误" ) );
                                 return false;
                             }
 
-                            if (currCol != colCount - 1)
-                                typ += ",";
-
                             builder.Append( typ );
-                        }
-                        else if (currRow == 1)
-                        {
+                            AppendComma( builder, currCol, colCount );
+                            //if (currCol != colCount - 1)//最后一行，逗号分隔
+                            //    typ += ",";
 
                         }
-                        else if (currRow == 2)
+                        else if (currRow == 2)//第三行注释，跳过
                         {
-
+                            continue;
                         }
                         else
                         {
                             
                         }
-
+                        builder.Append( "\n" );
                         #region
                         //switch (currRow)
                         //{
@@ -124,8 +132,6 @@ namespace TableConverter
                         //}
                         #endregion
                     }
-
-                    builder.Append( "\n" );
                 }
                 bf.Flush();
                 bf.Close();
@@ -142,8 +148,33 @@ namespace TableConverter
         private static string GetFieldType (object obj)
         {
             var type = obj as string;
+            if (string.IsNullOrEmpty( type ))
+                return null;
+
+            switch (type)
+            {
+                case "INT":
+                    return "INT";
+                case "STRING":
+                    return "STRING";
+                case "FLOAT":
+                    return "FLOAT";
+                case "INT[]":
+                    return "INT[]";
+                case "STRING[]":
+                    return "STRING[]";
+                case "FLOAT[]":
+                    return "FLOAT[]";
+                default:
+                    return null;
+            }
         }
 
+        private static void AppendComma (StringBuilder builder, int pos, int len)
+        {
+            if (pos != len - 1)
+                builder.Append( "," );
+        }
 
         /// <summary>
         /// buffer
