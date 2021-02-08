@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Game.Common.Event
+﻿namespace AquilaFramework.Common.Event
 {
     /// <summary>
     /// 事件ID

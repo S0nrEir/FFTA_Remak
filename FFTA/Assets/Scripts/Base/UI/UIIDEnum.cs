@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Common.UI
+namespace AquilaFramework.Common.UI
 {
     /// <summary>
     /// UI实例的唯一ID

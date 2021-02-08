@@ -1,8 +1,5 @@
-﻿using Game.Common.Tools;
-using Game.Common.UI;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using AquilaFramework.Common.Tools;
+using AquilaFramework.Common.UI;
 
 namespace Game.UI
 {

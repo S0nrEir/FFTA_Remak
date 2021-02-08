@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-
-namespace Game.Common.Define
+namespace AquilaFramework.Common.Define
 {
     /// <summary>
     /// 常用类型委托定义类;

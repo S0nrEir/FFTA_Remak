@@ -1,7 +1,6 @@
-﻿using Game.Common.Tools;
-using System.Collections;
+﻿using AquilaFramework.Common.Tools;
+using AquilaFramework.Common.UI;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Game.Common.UI
 {
@@ -108,7 +107,7 @@ namespace Game.Common.UI
             //#UIMgr尝试加载UI失败的处理
             if (ui is null)//todo这里处理的其实不太好，尝试加载UI失败
             {
-                Tools.Log.Error( "UIMgr--->faild to load ui:" + typeof( T ).Name );
+                Log.Error( "UIMgr--->faild to load ui:" + typeof( T ).Name );
                 return;
             }
             UITools.SetToUIRoot( ui );

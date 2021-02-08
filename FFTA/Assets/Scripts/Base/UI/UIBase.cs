@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static Game.Common.Define.DelegateDefine;
+﻿using UnityEngine;
+using static AquilaFramework.Common.Define.DelegateDefine;
 
-namespace Game.Common.UI
+namespace AquilaFramework.Common.UI
 {
     /// <summary>
     /// UI的基类，所有UI实例继承于此，对于所有UI，禁止使用单例

@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static Game.Common.Define.DelegateDefine;
+﻿using static AquilaFramework.Common.Define.DelegateDefine;
 
-namespace Game.Common.Event
+namespace AquilaFramework.Common.Event
 {
     /// <summary>
     /// Event参数类，标识了该事件调用的优先级，回调和事件ID

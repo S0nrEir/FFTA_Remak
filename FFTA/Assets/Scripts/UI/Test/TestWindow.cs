@@ -1,6 +1,4 @@
-﻿using Game.Common.UI;
-using System.Collections;
-using System.Collections.Generic;
+﻿using AquilaFramework.Common.UI;
 using UnityEngine;
 using UnityEngine.UI;
 

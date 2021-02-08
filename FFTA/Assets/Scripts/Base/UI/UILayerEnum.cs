@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Game.Common.UI
+﻿namespace AquilaFramework.Common.UI
 {
     /// <summary>
     /// UI层级枚举

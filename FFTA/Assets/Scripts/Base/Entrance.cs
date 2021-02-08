@@ -1,6 +1,4 @@
-﻿using Game.Common.Define;
-using System.Collections;
-using System.Collections.Generic;
+﻿using AquilaFramework.Common.Define;
 using UnityEngine;
 
 public class Entrance : MonoBehaviour

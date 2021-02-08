@@ -1,9 +1,7 @@
-﻿using Game.Common.Define;
-using System.Collections;
-using System.Collections.Generic;
+﻿using AquilaFramework.Common.Define;
 using UnityEngine;
 
-namespace Game.Common.Tools
+namespace AquilaFramework.Common.Tools
 {
     /// <summary>
     /// UI工具类

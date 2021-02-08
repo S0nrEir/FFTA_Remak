@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Common.Tools
+namespace AquilaFramework.Common.Tools
 {
     public class CommonTools
     {
