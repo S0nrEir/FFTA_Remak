@@ -18,15 +18,15 @@ namespace Game.Common
         /// <summary>
         /// 单例
         /// </summary>
-        public static T I
-        {
-            get
-            {
-                if (_ins is null)
-                    _ins = new T();
+        public static T I => _ins ?? GenIns();
 
-                return _ins;
-            }
+        /// <summary>
+        /// 生成单例
+        /// </summary>
+        private static T GenIns ()
+        {
+            _ins = new T();
+            return _ins;
         }
     }
 }

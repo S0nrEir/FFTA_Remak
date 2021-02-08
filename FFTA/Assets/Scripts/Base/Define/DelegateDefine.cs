@@ -34,6 +34,6 @@ namespace Game.Common.Define
         /// 参数：object[]
         /// 返回值：无
         /// </summary>
-        public delegate void Void_Objects_Del (object[] args);
+        public delegate void Void_ObjectArr_Del (object[] args);
     }
 }

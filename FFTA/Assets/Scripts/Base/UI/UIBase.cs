@@ -36,7 +36,7 @@ namespace Game.Common.UI
         #region private methods
 
         /// <summary>
-        /// 带Window的UI初始化
+        /// 带Window的UI初始化，初始化成功返回true
         /// </summary>
         public bool Init<T> (UIParam uiParam) where T:WindowBase
         {
@@ -138,7 +138,7 @@ namespace Game.Common.UI
         public virtual void OnLoad()
         {
             if (Window is null)
-                Tools.Log.Warnning("UI " + UIGameObject.name + "dosent have window sub class");
+                Tools.Log.Warnning( $"ui {UIGameObject.name} dosent have window sub class" );
         }
 
         protected virtual void OnEnable ()

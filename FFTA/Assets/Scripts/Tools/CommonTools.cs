@@ -13,7 +13,6 @@ namespace Game.Common.Tools
         {
             GameObject go = null;
 
-
             if (string.IsNullOrEmpty( name ))
             {
                 Log.Info( "UITools.FindFromObjects--->name is empty!" );
@@ -23,8 +22,9 @@ namespace Game.Common.Tools
             foreach (var item in objs)
             {
                 if (item.name.Equals( name ))
-                    go = item;
+                    return item;
             }
+
             return go;
         }
     }

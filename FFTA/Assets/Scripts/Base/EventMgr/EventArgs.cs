@@ -10,7 +10,7 @@ namespace Game.Common.Event
     /// </summary>
     public class EventArgs
     {
-        public EventArgs (EventID id, Void_Objects_Del callBack, object listener, EventOrderEnum order = EventOrderEnum.DEFAULT)
+        public EventArgs (EventID id, Void_ObjectArr_Del callBack, object listener, EventOrderEnum order = EventOrderEnum.DEFAULT)
         {
             EventID = id;
             CallBack = callBack;
@@ -37,7 +37,7 @@ namespace Game.Common.Event
         /// <summary>
         /// 回调
         /// </summary>
-        public Void_Objects_Del CallBack { get; private set; }
+        public Void_ObjectArr_Del CallBack { get; private set; }
 
         /// <summary>
         /// 回调顺序
