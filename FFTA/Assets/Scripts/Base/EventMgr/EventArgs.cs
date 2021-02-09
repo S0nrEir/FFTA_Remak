@@ -1,16 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static Game.Common.Define.DelegateDefine;
+﻿using static AquilaFramework.Common.Define.DelegateDefine;
 
-namespace Game.Common.Event
+namespace AquilaFramework.Common.Event
 {
     /// <summary>
     /// Event参数类，标识了该事件调用的优先级，回调和事件ID
     /// </summary>
     public class EventArgs
     {
-        public EventArgs (EventID id, Void_Objects_Del callBack, object listener, EventOrderEnum order = EventOrderEnum.DEFAULT)
+        public EventArgs (EventID id, Void_ObjectArr_Del callBack, object listener, EventOrderEnum order = EventOrderEnum.DEFAULT)
         {
             EventID = id;
             CallBack = callBack;
@@ -37,7 +34,7 @@ namespace Game.Common.Event
         /// <summary>
         /// 回调
         /// </summary>
-        public Void_Objects_Del CallBack { get; private set; }
+        public Void_ObjectArr_Del CallBack { get; private set; }
 
         /// <summary>
         /// 回调顺序

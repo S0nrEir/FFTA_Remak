@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Common.UI
+namespace AquilaFramework.Common.UI
 {
     /// <summary>
     /// UI预设资源引用基类

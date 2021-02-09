@@ -1,9 +1,7 @@
-﻿using Game.Common.Tools;
-using System.Collections;
+﻿using AquilaFramework.Common.Tools;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace Game.Common.Event
+namespace AquilaFramework.Common.Event
 {
     /// <summary>
     /// 事件管理器

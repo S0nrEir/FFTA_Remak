@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static Game.Common.Define.DelegateDefine;
+﻿using UnityEngine;
+using static AquilaFramework.Common.Define.DelegateDefine;
 
-namespace Game.Common.UI
+namespace AquilaFramework.Common.UI
 {
     /// <summary>
     /// UI的基类，所有UI实例继承于此，对于所有UI，禁止使用单例
@@ -36,7 +34,7 @@ namespace Game.Common.UI
         #region private methods
 
         /// <summary>
-        /// 带Window的UI初始化
+        /// 带Window的UI初始化，初始化成功返回true
         /// </summary>
         public bool Init<T> (UIParam uiParam) where T:WindowBase
         {
@@ -138,7 +136,7 @@ namespace Game.Common.UI
         public virtual void OnLoad()
         {
             if (Window is null)
-                Tools.Log.Warnning("UI " + UIGameObject.name + "dosent have window sub class");
+                Tools.Log.Warnning( $"ui {UIGameObject.name} dosent have window sub class" );
         }
 
         protected virtual void OnEnable ()

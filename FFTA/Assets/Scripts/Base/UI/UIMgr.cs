@@ -1,7 +1,6 @@
-﻿using Game.Common.Tools;
-using System.Collections;
+﻿using AquilaFramework.Common.Tools;
+using AquilaFramework.Common.UI;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Game.Common.UI
 {
@@ -27,10 +26,7 @@ namespace Game.Common.UI
                                                                                where W : WindowBase
         {
             var newUI = new T();
-            if (!newUI.Init<W>( param ))
-                return null;
-
-            return newUI;
+            return newUI.Init<W>( param ) ? newUI : null;
         }
 
         /// <summary>
@@ -49,17 +45,13 @@ namespace Game.Common.UI
         }
 
         #region getFromCache
+
         /// <summary>
         /// 从缓存队列中获取指定的UI实例，如果没有返回null
         /// </summary>
         private static UIBase GetFromCache<T> (T ui) where T : UIBase
         {
-            //var contains = _uiPool.Contains( ui );
-            var contains = _refDic.TryGetValue( ui.ID ,out var tempUI);
-            if (contains)
-                return tempUI as T;
-
-            return null;
+            return _refDic.TryGetValue( ui.ID, out var tempUI ) ? tempUI as T : null;
         }
 
         /// <summary>
@@ -67,10 +59,7 @@ namespace Game.Common.UI
         /// </summary>
         private static UIBase GetFromCache<T> (UIIDEnum id) where T : UIBase
         {
-            if (_refDic.TryGetValue( id, out var ui ))
-                return ui as T;
-
-            return null;
+            return _refDic.TryGetValue( id, out var tempUI ) ? tempUI as T : null;
         }
         #endregion
 
@@ -79,8 +68,6 @@ namespace Game.Common.UI
         /// <summary>
         /// 关闭UI，关闭后进入
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="uiID"></param>
         public static void Close<T> (UIIDEnum uiID) where T : UIBase
         {
             if (!_refDic.TryGetValue( uiID, out var ui ))
@@ -93,8 +80,6 @@ namespace Game.Common.UI
             var queueUI = _uiPool.Peek();
             if (queueUI.GetType() == typeof( T ) && queueUI.ID == uiID)
                 _uiPool.Dequeue();
-
-
 
             ui.Close();
         }
@@ -122,7 +107,7 @@ namespace Game.Common.UI
             //#UIMgr尝试加载UI失败的处理
             if (ui is null)//todo这里处理的其实不太好，尝试加载UI失败
             {
-                Tools.Log.Error( "UIMgr--->faild to load ui:" + typeof( T ).Name );
+                Log.Error( "UIMgr--->faild to load ui:" + typeof( T ).Name );
                 return;
             }
             UITools.SetToUIRoot( ui );

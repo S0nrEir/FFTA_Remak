@@ -1,10 +1,7 @@
-﻿using Game.Common.Tools;
-using System.Collections;
-using System.Collections.Generic;
+﻿using AquilaFramework.Common.Tools;
 using UnityEngine;
 
-
-namespace Game.Common.Define
+namespace AquilaFramework.Common.Define
 {
     /// <summary>
     /// 游戏全局Object实例类
@@ -31,10 +28,6 @@ namespace Game.Common.Define
             _uiRoot = uiGo.transform;
             _guideUIRoot = guideGo.transform;
             _normalUIRoot = normalGo.transform;
-
-            //_uiRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "UIRoot" );
-            //_guideUIRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "GuideLayer" );
-            //_normalUIRoot = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "NormalLayer" );
 
             //hold all
             DontDestroyOnLoad

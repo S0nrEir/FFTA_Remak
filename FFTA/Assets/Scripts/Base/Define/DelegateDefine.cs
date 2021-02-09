@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-
-namespace Game.Common.Define
+namespace AquilaFramework.Common.Define
 {
     /// <summary>
     /// 常用类型委托定义类;
@@ -34,6 +32,6 @@ namespace Game.Common.Define
         /// 参数：object[]
         /// 返回值：无
         /// </summary>
-        public delegate void Void_Objects_Del (object[] args);
+        public delegate void Void_ObjectArr_Del (object[] args);
     }
 }

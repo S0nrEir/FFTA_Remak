@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Common.UI
+namespace AquilaFramework.Common.UI
 {
     /// <summary>
     /// UI实例的唯一ID
@@ -14,32 +14,32 @@ namespace Game.Common.UI
         /// <summary>
         ///  初始UI
         /// </summary>
-        StartUpUI,
+        StartUpUI = 10,
 
         /// <summary>
         /// 存储
         /// </summary>
-        SaveAndLoadUI,
+        SaveAndLoadUI = 20,
 
         /// <summary>
         /// 任务板
         /// </summary>
-        MissionBoardUI,
+        MissionBoardUI = 30,
 
         /// <summary>
         /// 队伍概览
         /// </summary>
-        TeamOverViewUI,
+        TeamOverViewUI = 40,
 
         /// <summary>
         /// 角色详情
         /// </summary>
-        CharacterDetailUI,
+        CharacterDetailUI = 50,
 
         /// <summary>
         /// 购买/出售
         /// </summary>
-        BuyAndSaleUI,
+        BuyAndSaleUI = 60,
 
         None = 999,
     }
