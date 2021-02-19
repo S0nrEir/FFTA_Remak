@@ -51,7 +51,7 @@ namespace Game.Common.UI
         /// </summary>
         private static UIBase GetFromCache<T> (T ui) where T : UIBase
         {
-            return _refDic.TryGetValue( ui.ID, out var tempUI ) ? tempUI as T : null;
+            return _refDic.TryGetValue( ui.ID, out var tempUI ) ? tempUI : null;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Game.Common.UI
         /// </summary>
         private static UIBase GetFromCache<T> (UIIDEnum id) where T : UIBase
         {
-            return _refDic.TryGetValue( id, out var tempUI ) ? tempUI as T : null;
+            return _refDic.TryGetValue( id, out var tempUI ) ? tempUI : null;
         }
         #endregion
 
@@ -107,7 +107,7 @@ namespace Game.Common.UI
             //#UIMgr尝试加载UI失败的处理
             if (ui is null)//todo这里处理的其实不太好，尝试加载UI失败
             {
-                Log.Error( "UIMgr--->faild to load ui:" + typeof( T ).Name );
+                Log.Error( $"UIMgr--->faild to load ui:{typeof(T).Name}");
                 return;
             }
             UITools.SetToUIRoot( ui );

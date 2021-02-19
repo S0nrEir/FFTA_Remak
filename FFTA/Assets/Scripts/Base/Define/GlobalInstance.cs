@@ -13,13 +13,6 @@ namespace AquilaFramework.Common.Define
         /// </summary>
         public static void Init ()
         {
-            //MainCamera
-            //var mainCamGo = GameObject.Find("Main_Camera");
-            //_mainCamera = mainCamGo.GetComponent<Camera>();
-
-            //uiCamera
-            //var uiCamGo = GameObject.Find("UI_Camra");
-            //_uiCamera = uiCamGo.GetComponent<Camera>();
             GenMainCamera();
             GenUICamera();
 
@@ -27,12 +20,8 @@ namespace AquilaFramework.Common.Define
             GetUIRoot();
             GetNormalUiRoot();
             GetGuideUIRoot();
-            //var uiGo = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "UIRoot" );
             var guideGo = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "GuideLayer" );
-            //var normalGo = CommonTools.FindFromObjects( GameObject.FindGameObjectsWithTag( "UIRoot" ), "NormalLayer" );
-            //_uiRoot = uiGo.transform;
             _guideUIRoot = guideGo.transform;
-            //_normalUIRoot = normalGo.transform;
         }
 
         /// <summary>

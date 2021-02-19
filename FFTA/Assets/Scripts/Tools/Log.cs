@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using AquilaFramework.Common.Define;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,14 +10,22 @@ namespace AquilaFramework.Common.Tools
     /// </summary>
     public class Log
     {
+        private static void DoLog (string str)
+        {
+            if (!GlobalVar.IsOpenLog)
+                return;
+
+            Debug.Log( str );
+        }
+
         public static void Orange (string str)
         {
-            Debug.Log( $"<color=orange>${str}</color>" );
+            DoLog( $"<color=orange>${str}</color>" );
         }
 
         public static void Purple (string str)
         {
-            Debug.Log($"<color=purple>${str}</color>");
+            DoLog( $"<color=purple>${str}</color>");
         }
 
         /// <summary>
@@ -24,7 +33,7 @@ namespace AquilaFramework.Common.Tools
         /// </summary>
         public static void Info (string str)
         {
-            Debug.Log( $"<color=green>${str}</color>" );
+            DoLog( $"<color=green>${str}</color>" );
         }
 
         /// <summary>
@@ -32,7 +41,7 @@ namespace AquilaFramework.Common.Tools
         /// </summary>
         public static void Warnning (string str)
         {
-            Debug.Log( $"<color=yellow>${str}</color>" );
+            DoLog( $"<color=yellow>${str}</color>" );
         }
 
         /// <summary>
@@ -40,7 +49,7 @@ namespace AquilaFramework.Common.Tools
         /// </summary>
         public static void Error (string str)
         {
-            Debug.Log( $"<color=red>${str}</color>" );
+            DoLog( $"<color=red>${str}</color>" );
         }
 
         /// <summary>
@@ -48,7 +57,7 @@ namespace AquilaFramework.Common.Tools
         /// </summary>
         public static void Msg (string str)
         {
-            Debug.Log( $"<color=white>${str}</color>" );
+            DoLog( $"<color=white>${str}</color>" );
         }
     }
 }
