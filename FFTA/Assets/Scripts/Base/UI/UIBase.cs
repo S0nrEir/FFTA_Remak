@@ -16,7 +16,7 @@ namespace AquilaFramework.Common.UI
         {
             if (!Init( param ))
             {
-                Tools.Log.Error( "load faild:" + GetType().Name );
+                Tools.Log.Error( $"load faild:{GetType().Name}");
                 return;
             }
         }
@@ -26,7 +26,7 @@ namespace AquilaFramework.Common.UI
         /// </summary>
         public UIBase () 
         {
-            Tools.Log.Info("UIBase constructed:" + GetType().Name);
+            Tools.Log.Info($"UIBase constructed:{GetType().Name}");
             //Tools.Log.Warnning("通过默认构造了一个UI实例");
         }
         #endregion
@@ -54,12 +54,14 @@ namespace AquilaFramework.Common.UI
 
             ResetTransform();
 
+            Window ??= UIGameObject.GetComponent<T>();
             //处理Window的类型转换
-            var tWindow = UIGameObject.GetComponent<WindowBase>();
-            if (tWindow is null)
-                Window = null;
-            else
-                Window = tWindow as T;
+            //var tWindow = UIGameObject.GetComponent<T>();
+            //Window ??= tWindow;
+            //if (tWindow is null)
+            //    Window = null;
+            //else
+            //    Window = tWindow;
 
             return true;
         }
@@ -210,12 +212,12 @@ namespace AquilaFramework.Common.UI
         /// <summary>
         /// 实例gameObject对象
         /// </summary>
-        protected GameObject UIGameObject { get; private set; }
+        protected GameObject UIGameObject { get; private set; } = null;
 
         /// <summary>
         /// Transform组件
         /// </summary>
-        public Transform UITransform => UIGameObject.transform;
+        public Transform UITransform => UIGameObject?.transform ?? null;
 
         /// <summary>
         /// 是否需要每帧更新

@@ -21,7 +21,8 @@
         /// </summary>
         private static T GenIns ()
         {
-            _ins = new T();
+            //_ins = new T();
+            _ins ??= new T();
             return _ins;
         }
     }
