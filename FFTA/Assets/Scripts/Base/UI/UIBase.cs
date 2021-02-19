@@ -210,12 +210,12 @@ namespace AquilaFramework.Common.UI
         /// <summary>
         /// 实例gameObject对象
         /// </summary>
-        protected GameObject UIGameObject { get; private set; }
+        protected GameObject UIGameObject { get; private set; } = null;
 
         /// <summary>
         /// Transform组件
         /// </summary>
-        public Transform UITransform => UIGameObject is null ? null : UIGameObject.transform ;
+        public Transform UITransform => UIGameObject?.transform ?? null;
 
         /// <summary>
         /// 是否需要每帧更新
