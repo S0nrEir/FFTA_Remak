@@ -27,6 +27,15 @@ namespace AquilaFramework.Common.Tools
 
             return go;
         }
+
+        /// <summary>
+        /// 保留GameObject使其在切换场景时不被销毁
+        /// </summary>
+        public static void DontDestroyOnLoad (params GameObject[] gos)
+        {
+            foreach (var go in gos)
+                GameObject.DontDestroyOnLoad( go );
+        }
     }
 }
 
