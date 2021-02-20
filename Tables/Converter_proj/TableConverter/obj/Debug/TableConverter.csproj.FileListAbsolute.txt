@@ -9,3 +9,17 @@ E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\Ex
 E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\ExcelDataReader.pdb
 E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\ExcelDataReader.xml
 E:\FFTA\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.csproj.CopyComplete
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\TableConverter.exe.config
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\TableConverter.exe
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\TableConverter.pdb
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\ExcelDataReader.DataSet.dll
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\ExcelDataReader.dll
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\ExcelDataReader.pdb
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\ExcelDataReader.xml
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\ExcelDataReader.DataSet.pdb
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\bin\Debug\ExcelDataReader.DataSet.xml
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.csproj.CoreCompileInputs.cache
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.csproj.CopyComplete
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.exe
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.pdb
+E:\FFTA_Remake\FFTA_Remak\Tables\Converter_proj\TableConverter\obj\Debug\TableConverter.csprojAssemblyReference.cache
