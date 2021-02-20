@@ -13,10 +13,9 @@ namespace TableConverter
             var tableDirectory = excelPath;
 
             DirectoryInfo dirInfo = new DirectoryInfo( tableDirectory );
-            FileInfo[] files = dirInfo.GetFiles();
 
             //load normal table
-            foreach (var file in files)
+            foreach (var file in dirInfo.GetFiles())
             {
                 if (!ExcelLoader.LoadExcel( tableDirectory + @"\" + file.Name ,file.Name))
                     break;
