@@ -9,15 +9,6 @@ namespace AquilaFramework.Common.Define
     /// </summary>
     public class GlobalVar
     {
-        public static void Init (bool isOpenLog)
-        {
-            IsOpenLog = isOpenLog;
-        }
-
-        /// <summary>
-        /// log开关,true = 打开log
-        /// </summary>
-        public static bool IsOpenLog { get; private set; } = false;
     }
 }
 
