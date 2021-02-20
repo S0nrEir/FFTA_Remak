@@ -19,7 +19,7 @@ namespace TableConverter
         /// <summary>
         /// 缓冲流
         /// </summary>
-        private static BufferedStream _bs = null;
+        //private static BufferedStream _bs = null;
 
         /// <summary>
         /// 创建默认的路径文件
@@ -43,8 +43,9 @@ namespace TableConverter
         /// <summary>
         /// 读Excel
         /// </summary>
-        public static bool LoadExcel (string tablePath)
+        public static bool LoadExcel (string tablePath,string fileName)
         {
+            Console.WriteLine( $"读取文件:{tablePath}..." );
             if (!tablePath.EndsWith( ".xlsx" ))//非表文件跳过
             {
                 Console.WriteLine( string.Format( "非表文件！{0}", tablePath ) );
@@ -52,20 +53,17 @@ namespace TableConverter
             }
 
             //检查config目录是否存在，不存在创建，存在覆盖
-            if (!File.Exists( Define.ConfigPath ))
-            {
-                File.Create( Define.ConfigPath );
-                //Console.WriteLine( string.Format( "未检查到路径 {0}" ) );
-                //return false;
-            }
+            if (!Directory.Exists( Define.ConfigPath ))
+                Directory.CreateDirectory( Define.ConfigPath );
 
-            
             using (var stream = File.Open( tablePath, FileMode.Open, FileAccess.Read ))
             {
                 _reader = ExcelReaderFactory.CreateReader( stream );
                 StringBuilder builder = new StringBuilder();
-                var bf = GetBuffer( _reader.Name );
-
+                //var bf = GetBuffer( _reader.Name );
+                //var bf = GetBuffer( fileName.Replace(".xlsx",".csv") );
+                var sw = GetStreamWriter( fileName.Replace( ".xlsx", ".csv" ) );
+                
                 var set = _reader.AsDataSet();
                 var table = set.Tables[0];//sheet1
                 var rowCount = table.Rows.Count;
@@ -86,7 +84,7 @@ namespace TableConverter
                                         return false;
 
                                     //强制要求首行必须是ID
-                                    if (currCol == 0 && !string.Equals( "ID", fieldName ))
+                                    if (currCol == 0 && !string.Equals( "id", fieldName ))
                                     {
                                         Console.WriteLine( $"表{tablePath}，首行必须是ID" );
                                         return false;
@@ -95,7 +93,7 @@ namespace TableConverter
                                     builder.Append( fieldName );
                                     AppendComma( builder, currCol, colCount );
                                     break;
-                                }
+                                } 
                             case 1://第二行类型
                                 {
                                     var typ = GetFieldType( rowCursor[currCol] );
@@ -109,29 +107,39 @@ namespace TableConverter
                                     AppendComma( builder, currCol, colCount );
                                 }
                                 break;
-                            case 3://第三行注释，跳过
-                                continue;
-                                //break;
+                            case 2://第三行注释，跳过
+                                {
+                                    var annoatation = rowCursor[currCol] as string;
+                                    builder.Append( annoatation );
+                                    AppendComma( builder, currCol, colCount );
+                                }
+                                break;
                             default://默认生成行
                                 {
-                                    var value = rowCursor[currCol] as string;
+                                    var value = rowCursor[currCol].ToString();
                                     if (string.IsNullOrEmpty( value ))
                                     {
                                         Console.WriteLine($"读取表{tablePath}数据错误，行：{currRow},列:{currCol}");
                                         return false;
                                     }
                                     builder.Append( value );
+                                    AppendComma( builder, currCol, colCount );
                                 }
                                 break;
                         }
-                        builder.Append( "\n" );
                     }
+                    builder.Append( "\n" );
                 }//end for
                 //File.WriteAllText( Define.ConfigPath + @"\" + _reader.Name, builder.ToString(), Encoding.UTF8 );
-                var bytes = Encoding.UTF8.GetBytes( builder.ToString() );
-                bf.Write( bytes, 0, bytes.Length );
-                bf.Flush();
-                bf.Close();
+                //var encoding = new UTF8Encoding( true );
+                //var bytes = encoding.( builder.ToString() );
+                //var bytes = Encoding.UTF8.GetBytes( builder.ToString() );
+                //bf.Write( bytes, 0, bytes.Length );
+                //bf.Flush();
+                //bf.Close();
+                sw.Write( builder.ToString() );
+                sw.Flush();
+                sw.Close();
                 builder.Clear();
                 builder = null;
             }
@@ -176,7 +184,7 @@ namespace TableConverter
         }
 
         /// <summary>
-        /// buffer
+        /// 获取tsv格式的buffer
         /// </summary>
         private static BufferedStream GetBuffer (string fileName)
         {
@@ -184,13 +192,41 @@ namespace TableConverter
             FileStream stream = null;
 
             if (!File.Exists( configTablePath ))
+            {
                 stream = File.Create( configTablePath );
+                stream.Close();
+            }
             else//如果已存在，就清掉原来的文本内容
                 File.WriteAllText( configTablePath, string.Empty, Encoding.UTF8 );
 
-            stream = new FileStream( configTablePath, FileMode.Truncate, FileAccess.ReadWrite );
+            stream = new FileStream( configTablePath, FileMode.Open, FileAccess.Write );
             BufferedStream bs = new BufferedStream( stream );
             return bs;
         }
+
+        /// <summary>
+        /// 获取streamWriter
+        /// </summary>
+        private static StreamWriter GetStreamWriter (string fileName)
+        {
+            var configTablePath = Define.ConfigPath + @"\" + fileName;
+            FileStream stream = null;
+
+            if (!File.Exists( configTablePath ))
+            {
+                stream = File.Create( configTablePath );
+                stream.Close();
+            }
+            else//如果已存在，就清掉原来的文本内容
+                File.WriteAllText( configTablePath, string.Empty, Encoding.UTF8 );
+
+            stream = new FileStream( configTablePath, FileMode.Open, FileAccess.Write );
+            //BufferedStream bs = new BufferedStream( stream );
+            //excel在读取csv文件时是通过文件头的byte order mark来识别编码的，这导致生成的csv文件如果没有BOM则excel无法识别csv文件的编码，中文可能导致乱码，这里手动处理
+            var encoding = new UTF8Encoding( true );
+            var sw = new StreamWriter( stream, encoding );
+            return sw;
+        }
+
     }
 }

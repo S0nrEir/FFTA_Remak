@@ -1,0 +1,4 @@
+﻿id,Name,TestValue_1,TestValue_2,TestValue_3,TestValue_4
+INT,STRING,INT[],FLOAT,STRING,FLOAT[]
+注释,注释,注释,注释,注释,注释
+1,测试道具1,1,1,TestValue_,1f
