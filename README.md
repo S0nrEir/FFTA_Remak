@@ -1,9 +1,9 @@
 # AquilaFramework
 基于Unity的前端开发框架
 
-·Unity Ver:2019.1.9f1
-·.NetFramework Ver:4.7.1
-·.NetCore Ver:5.0.101
+·Unity Ver:2019.1.9f1  
+·.NetFramework Ver:4.7.1  
+·.NetCore Ver:5.0.101  
 
 另基于此框架开发了GBA版本的FFTA（最终幻想战略版）复刻版
 
