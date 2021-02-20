@@ -54,7 +54,8 @@ namespace AquilaFramework.Common.UI
 
             ResetTransform();
 
-            Window ??= UIGameObject.GetComponent<T>();
+            Window = UIGameObject.GetComponent<T>();
+            //Window ??= UIGameObject.GetComponent<T>();
             //处理Window的类型转换
             //var tWindow = UIGameObject.GetComponent<T>();
             //Window ??= tWindow;
