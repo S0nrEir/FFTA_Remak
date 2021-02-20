@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Entrance : MonoBehaviour
 {
+    [Header( "log开关" )]
     [SerializeField] private bool _isOpenLog = true;
 
     // Start is called before the first frame update
