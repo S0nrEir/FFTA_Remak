@@ -45,7 +45,7 @@ namespace TableConverter
         /// </summary>
         public static bool LoadExcel (string tablePath,string fileName)
         {
-                Console.WriteLine( $"读取文件:{tablePath}..." );
+            Console.WriteLine( $"读取文件:{tablePath}..." );
             if (!tablePath.EndsWith( ".xlsx" ))//非表文件跳过
             {
                 Console.WriteLine( string.Format( "非表文件！{0}", tablePath ) );
@@ -222,7 +222,7 @@ namespace TableConverter
 
             stream = new FileStream( configTablePath, FileMode.Open, FileAccess.Write );
             //BufferedStream bs = new BufferedStream( stream );
-            //excel在读取csv文件时是通过文件头的byte order mark来识别编码的，这导致生成的csv文件如果没有BOM
+            //excel在读取csv文件时是通过文件头的byte order mark来识别编码的，这导致生成的csv文件如果没有BOM则excel无法识别csv文件的编码，中文可能导致乱码，这里手动处理
             var encoding = new UTF8Encoding( true );
             var sw = new StreamWriter( stream, encoding );
             return sw;
