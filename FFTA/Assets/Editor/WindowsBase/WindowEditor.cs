@@ -12,18 +12,26 @@ namespace AquilaFramework.EditorExtension
     {
         //字段引用-下拉类型
         private GameObject[] _fieldsArr;
-
+        private int _objFieldsCount = 0;
 
         public override void OnInspectorGUI ()
         {
-            //base.OnInspectorGUI();
-            //GUILayout.Space( 10 );
+            base.OnInspectorGUI();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField( "object reference picker" );
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space();
+            EditorGUILayout.Space();
+            EditorGUILayout.Space();
 
-            //(GameObject)EditorGUI.ObjectField( new Rect( 3, 3,, 20 ), "Find Dependency", obj, typeof( GameObject ) );
-
-            //var option = new GUILayoutOption();
-
-            //_fieldsArr = (GameObject) EditorGUILayout.ObjectField("fields", _fieldsArr, true,);
+            //add referece
+            var verticalRect = EditorGUILayout.BeginVertical();
+            if (GUI.Button( new Rect( 0, 0, 100, 50 ), "添加引用" ))
+            {
+                Debug.Log("123");
+            }
+            EditorGUILayout.EndVertical();
+            
         }
     }
 }
