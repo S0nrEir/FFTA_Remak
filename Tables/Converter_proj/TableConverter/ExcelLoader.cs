@@ -40,6 +40,15 @@ namespace TableConverter
             }
         }
 
+
+        /// <summary>
+        /// 读静态表
+        /// </summary>
+        public static bool LoadStaticTable (string tablePath,string fileName)
+        {
+            return true;
+        }
+
         /// <summary>
         /// 读Excel
         /// </summary>
