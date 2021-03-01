@@ -4,10 +4,38 @@ using UnityEngine.EventSystems;
 
 namespace AquilaFramework.Common.UI
 {
+    [System.Serializable]
+    public class ObjectPickerValue
+    {
+        public GameObject Go;
+        public System.Type Type;
+        public string Name;
+
+        public ObjectPickerValue (GameObject go, System.Type typ, string name)
+            => Set( go, typ, name );
+
+        public ObjectPickerValue () { }
+
+        public void SetGo (GameObject go) => Go = go;
+        public void SetType (System.Type type) => this.Type = type;
+        public void SetName (string name) => this.Name = name;
+
+        public void Set (GameObject go, System.Type typ, string name)
+        {
+
+            SetGo( go );
+            SetType( typ );
+            SetName( name );
+        }
+
+        public bool Setted => Go != null && !string.IsNullOrEmpty( Name );
+    }
+
     /// <summary>
     /// UI预设资源引用基类
     /// </summary>
-    public partial class WindowBase : MonoBehaviour
+    [System.Serializable]
+    public class WindowBase : MonoBehaviour
     {
         //UI保存思路：
         //数组保存GameObject
@@ -17,13 +45,18 @@ namespace AquilaFramework.Common.UI
 
 
         #region GUILayout
-        /// <summary>
+        /// <summary> 
         /// 组件对象
         /// </summary>
-        [SerializeField] private GameObject[] _components;
+        [HideInInspector]
+        [SerializeField] public ObjectPickerValue[] _components; 
 
-        
 
+        /// <summary>
+        /// 生成保存的类名
+        /// </summary>
+        [HideInInspector]
+        public string _className = "test class name";
 
         #endregion
 

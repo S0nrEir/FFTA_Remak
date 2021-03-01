@@ -1,4 +1,5 @@
-﻿using AquilaFramework.Common.UI;
+﻿using AquilaFramework.Common.Tools;
+using AquilaFramework.Common.UI;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using UnityEditor;
@@ -6,26 +7,6 @@ using UnityEngine;
 
 namespace AquilaFramework.EditorExtension
 {
-    public class ObjectPickerValue
-    {
-        public GameObject Go;
-        public System.Type Type;
-        public string Name;
-
-        public void SetGo (GameObject go) => Go = go;
-        public void SetType (System.Type type) => this.Type = type;
-        public void SetName (string name) => this.Name = name;
-
-        public void Set (GameObject go, System.Type typ, string name)
-        {
-            SetGo( go );
-            SetType( typ );
-            SetName( name );
-        }
-
-        public bool Setted => Go != null && !string.IsNullOrEmpty( Name );
-    }
-
     /// <summary>
     /// WindowsBase编辑类
     /// </summary>
@@ -38,10 +19,16 @@ namespace AquilaFramework.EditorExtension
 
         private string _filePath;
 
+        /// <summary>
+        /// 类名
+        /// </summary>
+        private string _className;
+        private SerializedProperty _referenceList;
 
+        #region unity methods
         private void OnEnable ()
         {
-            Debug.Log("on enable") ;
+            LoadOriginalObject();
         }
 
         public override void OnInspectorGUI ()
@@ -60,13 +47,63 @@ namespace AquilaFramework.EditorExtension
             //    Debug.Log("drop down button");
             //}
             #endregion
+
             RefreshTarget();
             DrawFileTextField();
             DrawObjectPicker();
             DrawFilePathField();
             DrawReferenceButton();
             if (GUI.changed)
-                EditorUtility.SetDirty( target );
+            {
+                Undo.RecordObject( target ,"tar changed");
+                //EditorUtility.SetDirty( target );
+            }
+        }
+
+        #endregion
+
+        #region private methods
+
+        /// <summary>
+        /// 加载预设的序列化对象
+        /// </summary>
+        private void LoadOriginalObject ()
+        {
+            //load className
+            var tmp = serializedObject.FindProperty( "_className" );
+            _className = tmp.stringValue;
+            _referenceList = serializedObject.FindProperty( "_components" );
+            if (!_referenceList.isArray)
+            {
+                Log.Error( $"faild to find _list!" );
+                return;
+            }
+            TurnPropertyArray2List( _referenceList );
+        }
+
+        /// <summary>
+        /// 将读到的property数组转为list
+        /// </summary>
+        private void TurnPropertyArray2List (SerializedProperty refList)
+        {
+            if (refList is null)
+            {
+                Log.Error("refList is null");
+                return;
+            }
+            if (_list is null) _list = new List<ObjectPickerValue>();
+
+            ObjectPickerValue obj = null;
+            var cnt = refList.arraySize;
+            for (int i = 0; i < cnt; i++)
+            {
+                var sObj = refList.GetArrayElementAtIndex( i );
+                var go = sObj.FindPropertyRelative( "Go" );
+                var temp = sObj.FindPropertyRelative( "Type" );
+                //var type = temp as System.Type;
+                var name = sObj.FindPropertyRelative( "Name" ).stringValue;
+                //obj = new ObjectPickerValue
+            }
         }
 
         private void RefreshTarget ()
@@ -75,6 +112,17 @@ namespace AquilaFramework.EditorExtension
             sObj.Update();
         }
 
+        /// <summary>
+        /// 保存文件
+        /// </summary>
+        private void SaveFile ()
+        {
+
+        }
+        #endregion
+
+
+        #region draw
         /// <summary>
         /// 绘制对象选择器
         /// </summary>
@@ -181,10 +229,6 @@ namespace AquilaFramework.EditorExtension
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
         }
-
-        private void SaveFile ()
-        {
-            
-        }
+        #endregion
     }
 }
