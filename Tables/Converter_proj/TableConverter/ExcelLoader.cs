@@ -40,6 +40,15 @@ namespace TableConverter
             }
         }
 
+
+        /// <summary>
+        /// 读静态表
+        /// </summary>
+        public static bool LoadStaticTable (string tablePath,string fileName)
+        {
+            return true;
+        }
+
         /// <summary>
         /// 读Excel
         /// </summary>
@@ -214,13 +223,13 @@ namespace TableConverter
 
             if (!File.Exists( configTablePath ))
             {
-                stream = File.Create( configTablePath );
+                stream = File.Create( configTablePath);
                 stream.Close();
             }
             else//如果已存在，就清掉原来的文本内容
                 File.WriteAllText( configTablePath, string.Empty, Encoding.UTF8 );
 
-            stream = new FileStream( configTablePath, FileMode.Open, FileAccess.Write );
+            stream ??= new FileStream( configTablePath, FileMode.Open, FileAccess.Write );
             //BufferedStream bs = new BufferedStream( stream );
             //excel在读取csv文件时是通过文件头的byte order mark来识别编码的，这导致生成的csv文件如果没有BOM则excel无法识别csv文件的编码，中文可能导致乱码，这里手动处理
             var encoding = new UTF8Encoding( true );
