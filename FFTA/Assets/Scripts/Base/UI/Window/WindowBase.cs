@@ -5,20 +5,23 @@ using UnityEngine.EventSystems;
 namespace AquilaFramework.Common.UI
 {
     [System.Serializable]
-    public class ObjectPickerValue
+    public class SerializObject
     {
-        public GameObject Go;
-        public System.Type Type;
-        public string Name;
+        [SerializeField] private GameObject go;
+        //#TODO 这里有个问题：对于System.Type类型不可以直接映射到SerializedProperty类型的任何表示类型的字段，所以要用string做转换处理
+        [SerializeField] private System.Type type;
+        [SerializeField] private string name;
 
-        public ObjectPickerValue (GameObject go, System.Type typ, string name)
+        public (GameObject go, System.Type typ, string name) Values => (go, type, name);
+
+        public SerializObject (GameObject go, System.Type typ, string name)
             => Set( go, typ, name );
 
-        public ObjectPickerValue () { }
+        public SerializObject () { }
 
-        public void SetGo (GameObject go) => Go = go;
-        public void SetType (System.Type type) => this.Type = type;
-        public void SetName (string name) => this.Name = name;
+        public void SetGo (GameObject go) => this.go = go;
+        public void SetType (System.Type type) => this.type = type;
+        public void SetName (string name) => this.name = name;
 
         public void Set (GameObject go, System.Type typ, string name)
         {
@@ -28,13 +31,15 @@ namespace AquilaFramework.Common.UI
             SetName( name );
         }
 
-        public bool Setted => Go != null && !string.IsNullOrEmpty( Name );
+        public bool Setted => go != null && !string.IsNullOrEmpty( name );
+
+        public GameObject GameObj => go;
+        public string Name => name;
     }
 
     /// <summary>
     /// UI预设资源引用基类
     /// </summary>
-    [System.Serializable]
     public class WindowBase : MonoBehaviour
     {
         //UI保存思路：
@@ -48,15 +53,13 @@ namespace AquilaFramework.Common.UI
         /// <summary> 
         /// 组件对象
         /// </summary>
-        [HideInInspector]
-        [SerializeField] public ObjectPickerValue[] _components; 
+        [HideInInspector][SerializeField] private SerializObject[] _components; 
 
 
         /// <summary>
         /// 生成保存的类名
         /// </summary>
-        [HideInInspector]
-        public string _className = "test class name";
+        [HideInInspector][SerializeField] private string _className = "test class name";
 
         #endregion
 

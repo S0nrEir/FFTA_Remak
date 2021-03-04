@@ -15,7 +15,7 @@ namespace AquilaFramework.EditorExtension
     public class WindowBaseEditor : Editor
     {
         //字段引用-下拉类型
-        private List<ObjectPickerValue> _list = new List<ObjectPickerValue>();
+        private List<SerializObject> _list = new List<SerializObject>();
 
         private string _filePath;
 
@@ -91,25 +91,29 @@ namespace AquilaFramework.EditorExtension
                 Log.Error("refList is null");
                 return;
             }
-            if (_list is null) _list = new List<ObjectPickerValue>();
+            if (_list is null) _list = new List<SerializObject>();
 
-            ObjectPickerValue obj = null;
+            SerializObject obj = null;
             var cnt = refList.arraySize;
             for (int i = 0; i < cnt; i++)
             {
                 var sObj = refList.GetArrayElementAtIndex( i );
-                var go = sObj.FindPropertyRelative( "Go" );
-                var temp = sObj.FindPropertyRelative( "Type" );
-                //var type = temp as System.Type;
-                var name = sObj.FindPropertyRelative( "Name" ).stringValue;
-                //obj = new ObjectPickerValue
+                var go = sObj.FindPropertyRelative( "go" );
+                var type = sObj.FindPropertyRelative( "type" );
+                var name = sObj.FindPropertyRelative( "name" );
+                var stringValue = name.stringValue;
+                if (go is null || type is null /*|| string.IsNullOrEmpty( name )*/)
+                    continue;
+
+                //_list.Add( new SerializObject( go.objectReferenceValue as GameObject, typeof( GameObject ), name ) );
             }
         }
 
         private void RefreshTarget ()
         {
-            SerializedObject sObj = new SerializedObject( target );
-            sObj.Update();
+            serializedObject.Update();
+            //SerializedObject sObj = new SerializedObject( target );
+            //sObj.Update();
         }
 
         /// <summary>
@@ -134,16 +138,17 @@ namespace AquilaFramework.EditorExtension
             for (int i = 0; i < cnt; i++)
             {
                 var obj = _list[i];
-                if (obj is null) obj = new ObjectPickerValue();
+                if (obj is null) obj = new SerializObject();
                 EditorGUILayout.BeginHorizontal();
 
                 if (obj.Setted)
                 {
-                    EditorGUILayout.ObjectField( "objectPicker", obj.Go,obj.Type, true );
+                    var tup = obj.Values;
+                    EditorGUILayout.ObjectField( tup.name, tup.go,tup.typ, true );
                 }
                 else
                 {
-                    var selectedObj = EditorGUILayout.ObjectField( "objectPicker", obj.Go, typeof( GameObject ), true );
+                    var selectedObj = EditorGUILayout.ObjectField( "objectPicker", obj.GameObj, typeof( GameObject ), true );
                     if (selectedObj is null)
                     {
                         EditorGUILayout.EndHorizontal();
@@ -208,7 +213,7 @@ namespace AquilaFramework.EditorExtension
             var horizRect = EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button( "增加引用" ))
             {
-                _list.Add( new ObjectPickerValue() );
+                _list.Add( new SerializObject() );
             }
 
             if (GUILayout.Button( "删除引用" ))
@@ -222,6 +227,27 @@ namespace AquilaFramework.EditorExtension
 
             if (GUILayout.Button( "保存引用" ))
             {
+                //重新写入到propertyList
+                var cnt = _list.Count;
+                if (_referenceList is null)
+                    return;
+
+                _referenceList.ClearArray();
+                _referenceList.arraySize = cnt;
+
+                SerializObject sObj;
+                for (int i = 0; i < cnt; i++)
+                {
+                    sObj = _list[i];
+                    _referenceList.InsertArrayElementAtIndex( i );
+                    var comp = _referenceList.GetArrayElementAtIndex( i );
+                    var go = comp.FindPropertyRelative( "go" );
+                    var type = comp.FindPropertyRelative( "type" );
+                    var name = comp.FindPropertyRelative( "name" ).stringValue;
+                    go.objectReferenceValue = sObj.GameObj;
+                    name = go.name;
+                    
+                }
                 Undo.RecordObject( target, "tar changed" );
                 serializedObject.ApplyModifiedProperties();
             }
