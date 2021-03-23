@@ -5,27 +5,26 @@ using UnityEngine.EventSystems;
 namespace AquilaFramework.Common.UI
 {
     [System.Serializable]
-    public class SerializObject
+    public class WindowInspectorObj
     {
         [SerializeField] private GameObject go;
         //#TODO 这里有个问题：对于System.Type类型不可以直接映射到SerializedProperty类型的任何表示类型的字段，所以要用string做转换处理
-        [SerializeField] private System.Type type;
+        [SerializeField] private string type;
         [SerializeField] private string name;
 
-        public (GameObject go, System.Type typ, string name) Values => (go, type, name);
+        public (GameObject go, string typ, string name) Values => (go, type, name);
 
-        public SerializObject (GameObject go, System.Type typ, string name)
+        public WindowInspectorObj (GameObject go, string typ, string name)
             => Set( go, typ, name );
 
-        public SerializObject () { }
+        public WindowInspectorObj () { }
 
         public void SetGo (GameObject go) => this.go = go;
-        public void SetType (System.Type type) => this.type = type;
+        public void SetType (string type) => this.type = type;
         public void SetName (string name) => this.name = name;
 
-        public void Set (GameObject go, System.Type typ, string name)
+        public void Set (GameObject go, string typ, string name)
         {
-
             SetGo( go );
             SetType( typ );
             SetName( name );
@@ -35,6 +34,8 @@ namespace AquilaFramework.Common.UI
 
         public GameObject GameObj => go;
         public string Name => name;
+
+        public string Type => type;
     }
 
     /// <summary>
@@ -48,13 +49,11 @@ namespace AquilaFramework.Common.UI
         //输入框，保存类名
         //buttton，保存脚本
 
-
-        #region GUILayout
+        #region InspectorGUI Fields
         /// <summary> 
         /// 组件对象
         /// </summary>
-        [HideInInspector][SerializeField] private SerializObject[] _components; 
-
+        [HideInInspector][SerializeField] private WindowInspectorObj[] _components; 
 
         /// <summary>
         /// 生成保存的类名
@@ -71,8 +70,8 @@ namespace AquilaFramework.Common.UI
         #region uiHandler
         private Void_Void_Del _onMouseEnterDel = null;
         private Void_Void_Del _onMouseExitDel = null;
-        private void OnMouseEnter () => _onMouseEnterDel?.Invoke();
-        private void OnMouseExit () => _onMouseExitDel?.Invoke();
+        //private void OnMouseEnter () => _onMouseEnterDel?.Invoke();
+        //private void OnMouseExit () => _onMouseExitDel?.Invoke();
 
         #endregion
 
@@ -96,7 +95,5 @@ namespace AquilaFramework.Common.UI
         /// 获取该Window对应的UIID
         /// </summary>
         public UIIDEnum GetUIID () => _uiID;
-
-
     }
 }

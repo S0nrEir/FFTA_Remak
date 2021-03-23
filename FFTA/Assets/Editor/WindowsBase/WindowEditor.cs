@@ -8,6 +8,16 @@ using UnityEngine;
 namespace AquilaFramework.EditorExtension
 {
     /// <summary>
+    /// 内部类，表示面板形式的SerializObject
+    /// </summary>
+    internal class InspectorSerializObjct
+    {
+        public WindowInspectorObj _serializObject;
+        public int _selectTypeIdx;
+        public InspectorSerializObjct () { }
+    }
+
+    /// <summary>
     /// WindowsBase编辑类
     /// </summary>
     [CustomEditor( typeof( WindowBase ) )]//指定当WindowBase的GameObject选中时执行以下编辑器脚本，
@@ -15,7 +25,7 @@ namespace AquilaFramework.EditorExtension
     public class WindowBaseEditor : Editor
     {
         //字段引用-下拉类型
-        private List<SerializObject> _list = new List<SerializObject>();
+        private List<InspectorSerializObjct> _list = new List<InspectorSerializObjct>();
 
         private string _filePath;
 
@@ -72,6 +82,8 @@ namespace AquilaFramework.EditorExtension
             //load className
             var tmp = serializedObject.FindProperty( "_className" );
             _className = tmp.stringValue;
+
+            //load object reference
             _referenceList = serializedObject.FindProperty( "_components" );
             if (!_referenceList.isArray)
             {
@@ -91,29 +103,36 @@ namespace AquilaFramework.EditorExtension
                 Log.Error("refList is null");
                 return;
             }
-            if (_list is null) _list = new List<SerializObject>();
+            if (_list is null) _list = new List<InspectorSerializObjct>();
 
-            SerializObject obj = null;
+            WindowInspectorObj obj = null;
             var cnt = refList.arraySize;
             for (int i = 0; i < cnt; i++)
             {
                 var sObj = refList.GetArrayElementAtIndex( i );
                 var go = sObj.FindPropertyRelative( "go" );
-                var type = sObj.FindPropertyRelative( "type" );
-                var name = sObj.FindPropertyRelative( "name" );
-                var stringValue = name.stringValue;
-                if (go is null || type is null /*|| string.IsNullOrEmpty( name )*/)
+                var type = sObj.FindPropertyRelative( "type" ).stringValue;
+                var name = sObj.FindPropertyRelative( "name" ).stringValue;
+                if (go is null || string.IsNullOrEmpty( type ) || string.IsNullOrEmpty( name ))
                     continue;
 
-                //_list.Add( new SerializObject( go.objectReferenceValue as GameObject, typeof( GameObject ), name ) );
+                var serialObj = new WindowInspectorObj( go.objectReferenceValue as GameObject, type, name );
+                var index = GetSelectedIndex( serialObj.Type, GetGameobjetsCompTypes( serialObj.GameObj ) );
+                var inspectObj = new InspectorSerializObjct()
+                {
+                    _serializObject = serialObj,
+                    _selectTypeIdx = index,
+                };
+                _list.Add( inspectObj );
             }
         }
 
+        /// <summary>
+        /// 刷新Inspector面板
+        /// </summary>
         private void RefreshTarget ()
         {
             serializedObject.Update();
-            //SerializedObject sObj = new SerializedObject( target );
-            //sObj.Update();
         }
 
         /// <summary>
@@ -137,18 +156,23 @@ namespace AquilaFramework.EditorExtension
 
             for (int i = 0; i < cnt; i++)
             {
-                var obj = _list[i];
-                if (obj is null) obj = new SerializObject();
-                EditorGUILayout.BeginHorizontal();
+                if (_list[i] is null)
+                    continue;
 
-                if (obj.Setted)
+                var windowObj = _list[i]._serializObject;
+                var types = GetGameobjetsCompTypes( windowObj.GameObj );
+                var selectedIdx = GetSelectedIndex( windowObj.Type, types );
+
+                //draw object picker
+                EditorGUILayout.BeginHorizontal();
+                if (windowObj.Setted)
                 {
-                    var tup = obj.Values;
-                    EditorGUILayout.ObjectField( tup.name, tup.go,tup.typ, true );
+                    var tup = windowObj.Values;
+                    EditorGUILayout.ObjectField( tup.name, tup.go,typeof(GameObject), true );
                 }
                 else
                 {
-                    var selectedObj = EditorGUILayout.ObjectField( "objectPicker", obj.GameObj, typeof( GameObject ), true );
+                    var selectedObj = EditorGUILayout.ObjectField( "objectPicker", windowObj.GameObj, typeof( GameObject ), true );
                     if (selectedObj is null)
                     {
                         EditorGUILayout.EndHorizontal();
@@ -163,14 +187,49 @@ namespace AquilaFramework.EditorExtension
                     sObj.ApplyModifiedProperties();
                     sObj.Update();
 
-                    obj.Set( go, typeof( GameObject ), go.name );
+                    windowObj.Set( go, types[_list[i]._selectTypeIdx] , go.name );//popup的value
                     Debug.Log("setted");
                 }
 
+                //draw type selector
+                _list[i]._selectTypeIdx = EditorGUILayout.Popup( selectedIdx, types );
+
+                //draw name
+                var fieldName = EditorGUILayout.TextField( windowObj.Name);
+                windowObj.SetName( fieldName );
+
                 EditorGUILayout.EndHorizontal();
-            }
+            }//end for
 
             EditorGUILayout.EndVertical();
+        }
+
+        /// <summary>
+        /// 获取一个gameObject上所有组件的string类型表示
+        /// </summary>
+        private string[] GetGameobjetsCompTypes(GameObject go)
+        {
+            var compArr = go.GetComponents<Component>();
+            var len = compArr.Length;
+            var typeArr = new string[len + 1];
+            typeArr[0] = typeof(GameObject).Name;//默认第0项是GameObject
+            for (int i = 1; i < len; i++)
+                typeArr[i] = compArr[i].GetType().Name;
+
+            return typeArr;
+        }
+
+        /// <summary>
+        /// SerializObjct上指定类型在其GameObject上的组件下标，没有返回0（GameObject）
+        /// </summary>
+        private int GetSelectedIndex (string target,string[] types)
+        {
+            var len = types.Length;
+            for (int i = 0; i < len; i++)
+                if (types[i] == target)
+                    return i;
+
+            return 0;
         }
 
         /// <summary>
@@ -190,7 +249,7 @@ namespace AquilaFramework.EditorExtension
 
             EditorGUILayout.LabelField( "filePath:" );
             EditorGUILayout.TextField( string.Empty);
-            if (GUILayout.Button( "保存文件" ))
+            if (GUILayout.Button( "SaveFile" ))
             {
                 SaveFileDialog dlg = new SaveFileDialog();
                 dlg.Filter = $"{_filePath}|*.cs";
@@ -209,14 +268,12 @@ namespace AquilaFramework.EditorExtension
         /// </summary>
         private void DrawReferenceButton ()
         {
-            var verticalRect = EditorGUILayout.BeginVertical();
-            var horizRect = EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button( "增加引用" ))
-            {
-                _list.Add( new SerializObject() );
-            }
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button( " + " ))
+                _list.Add( new InspectorSerializObjct() );
 
-            if (GUILayout.Button( "删除引用" ))
+            if (GUILayout.Button( " - " ))
             {
                 var cnt = _list.Count;
                 if (cnt == 0)
@@ -225,7 +282,7 @@ namespace AquilaFramework.EditorExtension
                 _list.RemoveAt( cnt - 1 );
             }
 
-            if (GUILayout.Button( "保存引用" ))
+            if (GUILayout.Button( "Save Reference" ))
             {
                 //重新写入到propertyList
                 var cnt = _list.Count;
@@ -235,7 +292,7 @@ namespace AquilaFramework.EditorExtension
                 _referenceList.ClearArray();
                 _referenceList.arraySize = cnt;
 
-                SerializObject sObj;
+                InspectorSerializObjct sObj;
                 for (int i = 0; i < cnt; i++)
                 {
                     sObj = _list[i];
@@ -244,11 +301,18 @@ namespace AquilaFramework.EditorExtension
                     var go = comp.FindPropertyRelative( "go" );
                     var type = comp.FindPropertyRelative( "type" );
                     var name = comp.FindPropertyRelative( "name" ).stringValue;
-                    go.objectReferenceValue = sObj.GameObj;
+                    //go.objectReferenceValue = sObj._serializObject;
                     name = go.name;
                     
                 }
-                Undo.RecordObject( target, "tar changed" );
+                //Undo.RecordObject( target, "tar changed" );
+                serializedObject.ApplyModifiedProperties();
+            }
+
+            if (GUILayout.Button( "Clear Reference" ))
+            {
+                _referenceList?.ClearArray();
+                _list?.Clear();
                 serializedObject.ApplyModifiedProperties();
             }
 
