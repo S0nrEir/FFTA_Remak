@@ -5,7 +5,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace AquilaFramework.Editor
+namespace AquilaFramework.EditorExtension
 {
     public class ResourceMissingFounder
     {

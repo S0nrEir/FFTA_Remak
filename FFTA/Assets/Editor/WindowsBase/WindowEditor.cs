@@ -22,7 +22,7 @@ namespace AquilaFramework.EditorExtension
     /// </summary>
     [CustomEditor( typeof( WindowBase ) )]//指定当WindowBase的GameObject选中时执行以下编辑器脚本，
     //[System.Serializable]
-    public class WindowBaseEditor : Editor
+    public class WindowBaseEditor : UnityEditor.Editor
     {
         //字段引用-下拉类型
         private List<InspectorSerializObjct> _list = new List<InspectorSerializObjct>();
