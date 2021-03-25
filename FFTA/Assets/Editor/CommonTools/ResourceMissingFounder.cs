@@ -7,37 +7,140 @@ using UnityEngine;
 
 namespace AquilaFramework.EditorExtension
 {
-    public class ResourceMissingFounder
+    public class ResourceMissingFounder : EditorWindow
     {
-        /// <summary>
-        /// 查找指定路径下的丢失资源
-        /// </summary>
-        [MenuItem( "AuilaTools/FindMissingResource" )]
-        public static void FindMissingResource ()
+        public ResourceMissingFounder () => Init();
+
+        private void Init ()
         {
-            //另一种思路读prefab拿GUID然后查文件存在，有时间再弄吧
-            //var str = AssetDatabase.GUIDToAssetPath( "88d93511830e83e4e9028a7a56353077" );
-            //if (!File.Exists( str ))
-            //    Debug.Log( 1 );
-            //else
-            //    Debug.Log( 2 );
+            titleContent = new GUIContent( "Missing Reference Founder" );
+            _pathList = new List<string>( 1 );
+            _pathList.Add( string.Empty );
+            _pathCount = _pathList.Count;
+            maxSize = new Vector2( 500, 700 );
+            minSize = new Vector2( 500, 700 );
+        }
 
-            //var sstr = AssetDatabase.GUIDToAssetPath( "38c6cb7f8bec66d4f98b88955ada6099" );
-            //if (!File.Exists( sstr ))
-            //    Debug.Log( 1 );
-            //else
-            //    Debug.Log( 2 );
+        #region GUI
 
-            var standardPath = new string[]
+        private void OnFocus ()
+        {
+            maximized = true;
+        }
+
+        private void OnGUI ()
+        {
+            DrawTitle();
+            DrawPathFields();
+            DrawCheckButton();
+        }
+
+        #endregion
+
+        #region draw
+
+        private void DrawPathFields ()
+        {
+            GUILayout.BeginVertical();
+
+            var cnt = _pathList.Count;
+            for (int i = 0; i < cnt; i++)
+            {
+                GUILayout.BeginHorizontal();
+
+                GUILayout.TextField( _pathList[i], _textFiedOption );
+
+                if (GUILayout.Button( "选择" ))
                 {
-                    "Assets/MLDJ/GameRes/Prefab/Effect",
-                    "Assets/Res_MS/Effects/Data",
-                    "Assets/Res_MS/Prefab",
-                };
+                    //重写一遍，跨调用效果不好，不如用自带的
+                    var folder = EditorUtility.OpenFolderPanel( "选择文件夹", Application.dataPath, "" );
+                    //返回来的绝对路径要手动处理一下，蛋疼
+                    _pathList[i] = SubPath( folder );
 
-            var guidArr = AssetDatabase.FindAssets( "t:Prefab", standardPath );
+                }
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.EndVertical();
+        }
+
+        private void DrawCheckButton ()
+        {
+            GUILayout.Space( 20 );
+            GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button( "-" ))
+            {
+                if (_pathList.Count <= 1)
+                    return;
+
+                _pathList.RemoveAt( _pathList.Count - 1 );
+
+            }
+
+            if (GUILayout.Button( "+" ))
+                _pathList.Add( string.Empty );
+
+            if (GUILayout.Button( "检查以上目录资源引用" ))
+                Chk();
+
+            if (GUILayout.Button( "Clear" ))
+            {
+                var cnt = _pathList.Count;
+                for (int i = 0; i < cnt; i++)
+                    _pathList[i] = string.Empty;
+            }
+
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        }
+
+        private void DrawTitle ()
+        {
+            GUI.skin.label.fontSize = 10;
+            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+            GUILayout.Label( "Missing Resources Founder" );
+        }
+        #endregion
+
+        #region 检查函数
+        /// <summary>
+        /// 检查MLDJ目录下所有美术资源的引用情况，将丢引用的预设打印出来
+        /// </summary>
+        [UnityEditor.MenuItem( "MLDJ/检查美术资源引用" )]
+        public static void OpenWindow ()
+        {
+            EditorWindow.GetWindow( typeof( ResourceMissingFounder ) );
+        }
+
+        private string SubPath (string originalPath)
+        {
+            if (string.IsNullOrEmpty( originalPath ))
+                return originalPath;
+
+            var temp = originalPath;
+            var idx = temp.IndexOf( "Assets" );
+            temp = temp.Substring( idx );
+
+            return temp;
+        }
+
+        private void Chk ()
+        {
+            //        var standardPath = new string[]
+            //{
+            //                "Assets/MLDJ/GameRes/Prefab/Effect",
+            //                "Assets/Res_MS/Effects/Data",
+            //                "Assets/Res_MS/Prefab",
+            //};
+
+            if (_pathList.Count == 0)
+                return;
+
+            var test = _pathList.ToArray();
+            var guidArr = AssetDatabase.FindAssets( "t:Prefab", _pathList.ToArray() );
             List<string> resultLst = new List<string>();
-            Log.Info( $"资源数量{guidArr.Length}" );
+            Debug.Log( "资源数量:" + guidArr.Length );
 
             foreach (var guid in guidArr)
             {
@@ -107,19 +210,19 @@ namespace AquilaFramework.EditorExtension
             }
 
             if (IsResourceRefMissing<MeshRenderer>( prefab ))
-                res += $"MeshRender Missing:{GetGameObjectFullPath( prefab )},文件路径:{path}\n\n";
+                res += $"MeshRender Missing:{GetGameObjectFullPath( prefab )},\n文件路径:{path}\n\n";
 
             if (IsResourceRefMissing<SkinnedMeshRenderer>( prefab ))
-                res += $"SkinnedMesh Missing:{GetGameObjectFullPath( prefab )},文件路径:{path}\n\n";
+                res += $"SkinnedMesh Missing:{GetGameObjectFullPath( prefab )},\n文件路径:{path}\n\n";
 
             if (IsResourceRefMissing<Animation>( prefab ))
-                res += $"AnimClip Missing:{GetGameObjectFullPath( prefab )},文件路径：{path}\n\n";
+                res += $"AnimClip Missing:{GetGameObjectFullPath( prefab )},\n文件路径：{path}\n\n";
 
             if (IsResourceRefMissing<Animator>( prefab ))
-                res += $"Animator Missing:{GetGameObjectFullPath( prefab )}，文件路径:{path}\n\n";
+                res += $"Animator Missing:{GetGameObjectFullPath( prefab )}，\n文件路径:{path}\n\n";
 
             if (IsResourceRefMissing<ParticleSystemRenderer>( prefab ))
-                res += $"Particle Missing:{GetGameObjectFullPath( prefab )}，文件路径:{path}\n\n";
+                res += $"Particle Missing:{GetGameObjectFullPath( prefab )}，\n文件路径:{path}\n\n";
 
             return res;
         }
@@ -163,15 +266,6 @@ namespace AquilaFramework.EditorExtension
 
             SerializedObject sObj = new SerializedObject( tempComp );
 
-            //if (tempComp.GetType() == typeof( ParticleSystemRenderer ))
-            //{
-            //    var tsp = sObj.GetIterator();
-            //    while (tsp.NextVisible( true ))
-            //    {
-            //        Debug.Log( $"<color=green>type:{tempComp.GetType().ToString()},disName:{tsp.displayName},internalName:{tsp.name}</color>" );
-            //    }
-            //}
-
             var sp = sObj.FindProperty( propertyName );
 
             var refMethod = typeof( SerializedProperty ).GetProperty( "objectReferenceStringValue",
@@ -197,38 +291,8 @@ namespace AquilaFramework.EditorExtension
                 }
             }
 
-            #region
-            //while (tSp.NextVisible( true ))
-            //{
-            //var tt = sp.FindPropertyRelative( "objectReferenceStringValue" );
-
-
-            //var refMethod = typeof( SerializedProperty ).GetProperty( "objectReferenceStringValue",
-            //    System.Reflection.BindingFlags.Instance |
-            //    System.Reflection.BindingFlags.NonPublic |
-            //    System.Reflection.BindingFlags.Public );
-
-            //var tempStr = (string)refMethod.GetGetMethod( true ).Invoke( sp, null );
-            //Debug.Log( sp.stringValue + "," + tempStr );
-
-            ////var stringValue = refMethod == null ? string.Empty : (string)refMethod.GetGetMethod( true ).Invoke( sp, new object[] { } );
-            //if (sp.propertyType != SerializedPropertyType.ObjectReference)
-            //    continue;
-
-            //if (sp.objectReferenceValue == null && sp.objectReferenceInstanceIDValue != 0)
-            //    return true;
-
-            ////if (stringValue.StartsWith( "Missing" ))
-            ////    return true;
-            //}
-            #endregion
 
             return false;
-        }
-
-        private bool HandlerParticelSystem ()
-        {
-            return true;
         }
 
         /// <summary>
@@ -246,6 +310,27 @@ namespace AquilaFramework.EditorExtension
 
             return path;
         }
-    }
+        #endregion
 
-}
+        #region fields
+
+        /// <summary>
+        /// 要检查的路径总数
+        /// </summary>
+        private int _pathCount = 0;
+
+        /// <summary>
+        /// 保存选择路径
+        /// </summary>
+        private List<string> _pathList;
+
+        private GUILayoutOption[] _textFiedOption = new GUILayoutOption[]
+        {
+            GUILayout.Height(20),
+            GUILayout.Width(450),
+        };
+
+
+        #endregion
+
+    }
