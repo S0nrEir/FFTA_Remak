@@ -105,7 +105,7 @@ namespace AquilaFramework.EditorExtension
 
         #region 检查函数
         /// <summary>
-        /// 检查MLDJ目录下所有美术资源的引用情况，将丢引用的预设打印出来
+        /// 检查指定目录下所有美术资源的引用情况，将丢引用的预设打印出来
         /// </summary>
         [UnityEditor.MenuItem( "AquilaFrameWork/ResTools/ResourceMissingFounder" )]
         public static void OpenWindow ()
