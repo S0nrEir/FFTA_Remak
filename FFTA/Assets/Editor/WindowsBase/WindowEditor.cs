@@ -84,8 +84,6 @@ namespace AquilaFramework.EditorExtension
         private void LoadOriginalObject ()
         {
             //load className
-            //var tmp = serializedObject.FindProperty( "_className" );
-            //_className = tmp.stringValue;
             _className = serializedObject.FindProperty( "_className" ).stringValue;
             _filePath = serializedObject.FindProperty( "_classFilePath" ).stringValue;
 
@@ -166,17 +164,18 @@ namespace AquilaFramework.EditorExtension
                     continue;
 
                 var windowObj = _list[i]._serializObject;
-
                 //draw object picker
                 EditorGUILayout.BeginHorizontal();
                 if (windowObj != null && windowObj.Setted)
                 {
                     var tup = windowObj.Values;
-                    EditorGUILayout.ObjectField( tup.name, tup.go, typeof( GameObject ), true ,_objectPickerOptionArr);
+                    EditorGUILayout.ObjectField( tup.name, tup.go, typeof( GameObject ), true, _objectPickerOptionArr );
                 }
                 else
                 {
-                    var selectedObj = EditorGUILayout.ObjectField( "objectPicker", windowObj.GameObj, typeof( GameObject ), false ,_objectPickerOptionArr);
+                    var selectedObj = EditorGUILayout.ObjectField( string.Empty, windowObj.GameObj, 
+                        typeof( GameObject ),true, _objectPickerOptionArr );
+
                     if (selectedObj is null)
                     {
                         EditorGUILayout.EndHorizontal();
@@ -201,7 +200,7 @@ namespace AquilaFramework.EditorExtension
                 var selectedIdx = GetSelectedIndex( windowObj.Type, types );
 
                 //draw type selector
-                var idx = EditorGUILayout.Popup( selectedIdx, types, _popOptionArr );
+                var idx = EditorGUILayout.Popup( selectedIdx, types/*, _popOptionArr*/ );
                 _list[i]._selectTypeIdx = idx;
                 _list[i]._serializObject.SetType(types[idx] );
 
@@ -260,19 +259,34 @@ namespace AquilaFramework.EditorExtension
 
             EditorGUILayout.LabelField( "filePath:" ,new GUILayoutOption[] { GUILayout.Width(50) } );
             _filePath = EditorGUILayout.TextField( _filePath );
-            _className = EditorGUILayout.TextField( "TestWindowBase", new GUILayoutOption[] { GUILayout.Width( 100 ) } );
+
+            //检查类名
+            if (string.IsNullOrEmpty( _className ) || _className.Contains( " " ))
+            {
+                Log.Error("类名不合法");
+                return;
+            }
+
             if (GUILayout.Button( "SaveFile" ))
             {
                 SaveFileDialog dlg = new SaveFileDialog();
                 dlg.Filter = $"{_filePath}|*.cs";
                 if (dlg.ShowDialog() == DialogResult.Yes)
                 {
-
                 }
                 //reset filePath;
             }
 
             EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+
+            EditorGUILayout.LabelField( "ClassName:" , new GUILayoutOption[] { GUILayout.Width(100) } );
+
+            _className = EditorGUILayout.TextField( _className, new GUILayoutOption[] { GUILayout.Width( 100 ) } );
+
+            EditorGUILayout.EndHorizontal();
+
             EditorGUILayout.EndVertical();
         }
 
@@ -317,7 +331,6 @@ namespace AquilaFramework.EditorExtension
                     go.objectReferenceValue = sObj._serializObject.GameObj;
                     type.stringValue = sObj._serializObject.Type;
                     name.stringValue = sObj._serializObject.Name;
-
                 }
                 //Undo.RecordObject( target, "tar changed" );
                 serializedObject.ApplyModifiedProperties();
@@ -343,11 +356,11 @@ namespace AquilaFramework.EditorExtension
                 GUILayout.MaxWidth(200),
             };
 
-        private GUILayoutOption[] _popOptionArr = new GUILayoutOption[]
-            {
-                        GUILayout.Width(150),
-                        GUILayout.MaxWidth(150),
-            };
+        //private GUILayoutOption[] _popOptionArr = new GUILayoutOption[]
+        //    {
+        //                GUILayout.Width(150),
+        //                GUILayout.MaxWidth(150),
+        //    };
 
         #endregion
     }
