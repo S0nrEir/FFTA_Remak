@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using AquilaFramework.Common.Tools;
+using UnityEngine;
 using static AquilaFramework.Common.Define.DelegateDefine;
 
 namespace AquilaFramework.Common.UI
@@ -56,13 +57,6 @@ namespace AquilaFramework.Common.UI
 
             Window = UIGameObject.GetComponent<T>();
             //Window ??= UIGameObject.GetComponent<T>();
-            //处理Window的类型转换
-            //var tWindow = UIGameObject.GetComponent<T>();
-            //Window ??= tWindow;
-            //if (tWindow is null)
-            //    Window = null;
-            //else
-            //    Window = tWindow;
 
             return true;
         }
@@ -142,7 +136,7 @@ namespace AquilaFramework.Common.UI
                 Tools.Log.Warnning( $"ui {UIGameObject.name} dosent have window sub class" );
         }
 
-        protected virtual void OnEnable ()
+        private void OnEnable ()
         {
             RegisterEvent();
         }
@@ -157,7 +151,7 @@ namespace AquilaFramework.Common.UI
             
         }
 
-        protected virtual void OnDisable ()
+        private void OnDisable ()
         {
             UnRegisterEvent();
         }
