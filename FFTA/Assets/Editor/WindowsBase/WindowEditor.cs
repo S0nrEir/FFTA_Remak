@@ -14,7 +14,10 @@ namespace AquilaFramework.EditorExtension
     {
         public WindowInspectorObj _serializObject;
         public int _selectTypeIdx;
-        public InspectorSerializObjct () { }
+        public InspectorSerializObjct () 
+        {
+            _serializObject = new WindowInspectorObj();
+        }
     }
 
     /// <summary>
@@ -27,12 +30,19 @@ namespace AquilaFramework.EditorExtension
         //字段引用-下拉类型
         private List<InspectorSerializObjct> _list = new List<InspectorSerializObjct>();
 
+        /// <summary>
+        /// 类文件路径
+        /// </summary>
         private string _filePath;
 
         /// <summary>
         /// 类名
         /// </summary>
         private string _className;
+
+        /// <summary>
+        /// 组件引用列表
+        /// </summary>
         private SerializedProperty _referenceList;
 
         #region unity methods
@@ -44,35 +54,29 @@ namespace AquilaFramework.EditorExtension
         public override void OnInspectorGUI ()
         {
             base.OnInspectorGUI();
-            #region no use
-            //EditorGUILayout.BeginHorizontal();
-            //EditorGUILayout.LabelField( "object reference picker" );
-            //EditorGUILayout.EndHorizontal();
-            //EditorGUILayout.Space();
-            //EditorGUILayout.Space();
-            //EditorGUILayout.Space();
-            //GUIContent content = new GUIContent( "dropDownButton" );
-            //if (EditorGUI.DropdownButton( new Rect( 0, 0, 100, 50 ), content,FocusType.Keyboard ))
-            //{
-            //    Debug.Log("drop down button");
-            //}
-            #endregion
 
             RefreshTarget();
-            DrawFileTextField();
+            //DrawFileTextField();
             DrawObjectPicker();
             DrawFilePathField();
             DrawReferenceButton();
             if (GUI.changed)
             {
-                Undo.RecordObject( target ,"tar changed");
+                Undo.RecordObject( target, "tar changed" );
                 //EditorUtility.SetDirty( target );
             }
         }
-
         #endregion
 
         #region private methods
+
+        /// <summary>
+        /// 生成类文件
+        /// </summary>
+        private void GenerateClassFile ()
+        {
+            
+        }
 
         /// <summary>
         /// 加载预设的序列化对象
@@ -80,8 +84,10 @@ namespace AquilaFramework.EditorExtension
         private void LoadOriginalObject ()
         {
             //load className
-            var tmp = serializedObject.FindProperty( "_className" );
-            _className = tmp.stringValue;
+            //var tmp = serializedObject.FindProperty( "_className" );
+            //_className = tmp.stringValue;
+            _className = serializedObject.FindProperty( "_className" ).stringValue;
+            _filePath = serializedObject.FindProperty( "_classFilePath" ).stringValue;
 
             //load object reference
             _referenceList = serializedObject.FindProperty( "_components" );
@@ -100,7 +106,7 @@ namespace AquilaFramework.EditorExtension
         {
             if (refList is null)
             {
-                Log.Error("refList is null");
+                Log.Error( "refList is null" );
                 return;
             }
             if (_list is null) _list = new List<InspectorSerializObjct>();
@@ -160,19 +166,17 @@ namespace AquilaFramework.EditorExtension
                     continue;
 
                 var windowObj = _list[i]._serializObject;
-                var types = GetGameobjetsCompTypes( windowObj.GameObj );
-                var selectedIdx = GetSelectedIndex( windowObj.Type, types );
 
                 //draw object picker
                 EditorGUILayout.BeginHorizontal();
-                if (windowObj.Setted)
+                if (windowObj != null && windowObj.Setted)
                 {
                     var tup = windowObj.Values;
-                    EditorGUILayout.ObjectField( tup.name, tup.go,typeof(GameObject), true );
+                    EditorGUILayout.ObjectField( tup.name, tup.go, typeof( GameObject ), true ,_objectPickerOptionArr);
                 }
                 else
                 {
-                    var selectedObj = EditorGUILayout.ObjectField( "objectPicker", windowObj.GameObj, typeof( GameObject ), true );
+                    var selectedObj = EditorGUILayout.ObjectField( "objectPicker", windowObj.GameObj, typeof( GameObject ), false ,_objectPickerOptionArr);
                     if (selectedObj is null)
                     {
                         EditorGUILayout.EndHorizontal();
@@ -184,18 +188,25 @@ namespace AquilaFramework.EditorExtension
 
                     var sObj = new SerializedObject( go );
 
+                    windowObj.SetGo( go );
+                    var typeStr = GetGameobjetsCompTypes( windowObj.GameObj );
+                    windowObj.Set( go, typeStr[_list[i]._selectTypeIdx], go.name );//popup的value
+
                     sObj.ApplyModifiedProperties();
                     sObj.Update();
-
-                    windowObj.Set( go, types[_list[i]._selectTypeIdx] , go.name );//popup的value
-                    Debug.Log("setted");
+                    Debug.Log( "setted" );
                 }
 
+                var types = GetGameobjetsCompTypes( windowObj.GameObj );
+                var selectedIdx = GetSelectedIndex( windowObj.Type, types );
+
                 //draw type selector
-                _list[i]._selectTypeIdx = EditorGUILayout.Popup( selectedIdx, types );
+                var idx = EditorGUILayout.Popup( selectedIdx, types, _popOptionArr );
+                _list[i]._selectTypeIdx = idx;
+                _list[i]._serializObject.SetType(types[idx] );
 
                 //draw name
-                var fieldName = EditorGUILayout.TextField( windowObj.Name);
+                var fieldName = EditorGUILayout.TextField( windowObj.Name );
                 windowObj.SetName( fieldName );
 
                 EditorGUILayout.EndHorizontal();
@@ -207,12 +218,12 @@ namespace AquilaFramework.EditorExtension
         /// <summary>
         /// 获取一个gameObject上所有组件的string类型表示
         /// </summary>
-        private string[] GetGameobjetsCompTypes(GameObject go)
+        private string[] GetGameobjetsCompTypes (GameObject go)
         {
             var compArr = go.GetComponents<Component>();
             var len = compArr.Length;
             var typeArr = new string[len + 1];
-            typeArr[0] = typeof(GameObject).Name;//默认第0项是GameObject
+            typeArr[0] = typeof( GameObject ).Name;//默认第0项是GameObject
             for (int i = 1; i < len; i++)
                 typeArr[i] = compArr[i].GetType().Name;
 
@@ -222,7 +233,7 @@ namespace AquilaFramework.EditorExtension
         /// <summary>
         /// SerializObjct上指定类型在其GameObject上的组件下标，没有返回0（GameObject）
         /// </summary>
-        private int GetSelectedIndex (string target,string[] types)
+        private int GetSelectedIndex (string target, string[] types)
         {
             var len = types.Length;
             for (int i = 0; i < len; i++)
@@ -238,7 +249,7 @@ namespace AquilaFramework.EditorExtension
         private void DrawFileTextField ()
         {
             EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField("object referece picker");
+            EditorGUILayout.LabelField( "-------------------object referece picker-------------------" );
             EditorGUILayout.EndVertical();
         }
 
@@ -247,16 +258,18 @@ namespace AquilaFramework.EditorExtension
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal();
 
-            EditorGUILayout.LabelField( "filePath:" );
-            EditorGUILayout.TextField( string.Empty);
+            EditorGUILayout.LabelField( "filePath:" ,new GUILayoutOption[] { GUILayout.Width(50) } );
+            _filePath = EditorGUILayout.TextField( _filePath );
+            _className = EditorGUILayout.TextField( "TestWindowBase", new GUILayoutOption[] { GUILayout.Width( 100 ) } );
             if (GUILayout.Button( "SaveFile" ))
             {
                 SaveFileDialog dlg = new SaveFileDialog();
                 dlg.Filter = $"{_filePath}|*.cs";
-                if (dlg.ShowDialog() == DialogResult.Yes)//保存成功
+                if (dlg.ShowDialog() == DialogResult.Yes)
                 {
-                    
+
                 }
+                //reset filePath;
             }
 
             EditorGUILayout.EndHorizontal();
@@ -300,10 +313,11 @@ namespace AquilaFramework.EditorExtension
                     var comp = _referenceList.GetArrayElementAtIndex( i );
                     var go = comp.FindPropertyRelative( "go" );
                     var type = comp.FindPropertyRelative( "type" );
-                    var name = comp.FindPropertyRelative( "name" ).stringValue;
-                    //go.objectReferenceValue = sObj._serializObject;
-                    name = go.name;
-                    
+                    var name = comp.FindPropertyRelative( "name" );
+                    go.objectReferenceValue = sObj._serializObject.GameObj;
+                    type.stringValue = sObj._serializObject.Type;
+                    name.stringValue = sObj._serializObject.Name;
+
                 }
                 //Undo.RecordObject( target, "tar changed" );
                 serializedObject.ApplyModifiedProperties();
@@ -319,6 +333,22 @@ namespace AquilaFramework.EditorExtension
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
         }
+        #endregion
+
+        #region fields
+
+        private GUILayoutOption[] _objectPickerOptionArr = new GUILayoutOption[]
+            {
+                GUILayout.Width(200),
+                GUILayout.MaxWidth(200),
+            };
+
+        private GUILayoutOption[] _popOptionArr = new GUILayoutOption[]
+            {
+                        GUILayout.Width(150),
+                        GUILayout.MaxWidth(150),
+            };
+
         #endregion
     }
 }

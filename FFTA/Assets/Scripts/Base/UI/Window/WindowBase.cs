@@ -58,7 +58,12 @@ namespace AquilaFramework.Common.UI
         /// <summary>
         /// 生成保存的类名
         /// </summary>
-        [HideInInspector][SerializeField] private string _className = "test class name";
+        [HideInInspector][SerializeField] private string _className = "WindowBaseClass";
+
+        /// <summary>
+        /// 类文件路径
+        /// </summary>
+        [HideInInspector] [SerializeField] private string _classFilePath = "classFilePath";
 
         #endregion
 
