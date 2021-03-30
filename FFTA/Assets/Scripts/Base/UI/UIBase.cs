@@ -37,7 +37,7 @@ namespace AquilaFramework.Common.UI
         /// <summary>
         /// 带Window的UI初始化，初始化成功返回true
         /// </summary>
-        public bool Init<T> (UIParam uiParam) where T:WindowBase
+        public bool Init<T> (UIParam uiParam) where T:WindowBase,new()
         {
             param = uiParam;
             //根据path加载
@@ -52,11 +52,14 @@ namespace AquilaFramework.Common.UI
 
             //set UI name:
             UIGameObject.name = ID.ToString();
-
+             
             ResetTransform();
 
-            Window = UIGameObject.GetComponent<T>();
+            Window = new T();
+            //Window = UIGameObject.GetComponent<T>();
+            Window?.Init(UIGameObject);
             //Window ??= UIGameObject.GetComponent<T>();
+
 
             return true;
         }
@@ -67,7 +70,7 @@ namespace AquilaFramework.Common.UI
         public bool Init (UIParam uiParam)
         {
             param = uiParam;
-            //根据path加载
+            //#根据path加载，改成AssetsManager
             var obj = Resources.Load<GameObject>( Path );
             if (obj is null)
                 return false;
@@ -79,7 +82,8 @@ namespace AquilaFramework.Common.UI
 
             ResetTransform();
 
-            Window = null;
+            Window = UIGameObject.GetComponent<WindowBase>();
+            Window?.Init();
 
             return true;
         }
@@ -91,7 +95,7 @@ namespace AquilaFramework.Common.UI
         {
             if (UIGameObject is null)
             {
-                Tools.Log.Error( "UIBase.ResetTransform--->UIGameObejct is null!" );
+                Log.Error( "UIBase.ResetTransform--->UIGameObejct is null!" );
                 return;
             }
 
@@ -148,7 +152,7 @@ namespace AquilaFramework.Common.UI
 
         protected virtual void OnClose ()
         {
-            
+            Window?.DeInit();
         }
 
         private void OnDisable ()
@@ -233,6 +237,11 @@ namespace AquilaFramework.Common.UI
         /// 窗口引用实例，任何对于Prefab元素/组件的操作都通过此字段实现
         /// </summary>
         protected WindowBase Window { get; private set; } = null;
+
+        /// <summary>
+        /// instance
+        /// </summary>
+        public UIBase Instance { get; private set; } = null;
     }
 
     /// <summary>

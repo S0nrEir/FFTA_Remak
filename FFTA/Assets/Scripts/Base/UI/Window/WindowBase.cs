@@ -36,6 +36,7 @@ namespace AquilaFramework.Common.UI
         public string Name => name;
 
         public string Type => type;
+
     }
 
     /// <summary>
@@ -93,6 +94,22 @@ namespace AquilaFramework.Common.UI
         void Start () => _onStartDel?.Invoke();
         void OnDisable () => _onDisableDel?.Invoke();
         void OnDestroy () => _onDestryDel?.Invoke();
+
+        #endregion
+
+        #region override
+
+        public virtual void Init ()
+        {
+        }
+
+        public virtual void Init (GameObject uiBaseGameObject)
+        { 
+        }
+
+        public virtual void DeInit()
+        {
+        }
 
         #endregion
 

@@ -1,10 +1,14 @@
 ﻿using AquilaFramework.Common.Tools;
 using AquilaFramework.Common.UI;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using UnityEditor;
 using UnityEngine;
 
+//210330更新：将UI编辑器和WindowBase类分开来，编辑器类专门做预设引用拖拽和类的设置，
+//WindowBase作为单独的一个类型，以一个字段的形式表示在UIBase中，基类Init方法，子类实现，传入一个表示该UI根节点的GameObject，然后WindowBase的子类实现，根据该GameObject找到相应的字段引用
 namespace AquilaFramework.EditorExtension
 {
     /// <summary>
@@ -12,18 +16,22 @@ namespace AquilaFramework.EditorExtension
     /// </summary>
     internal class InspectorSerializObjct
     {
-        public WindowInspectorObj _serializObject;
-        public int _selectTypeIdx;
+        public WindowInspectorObj _serializObject = null;
+        public int _selectTypeIdx = -1;
+        public string _objectNodePath = string.Empty;
         public InspectorSerializObjct () 
         {
             _serializObject = new WindowInspectorObj();
+
+            //WindowBase t = new Game.UI.TestWindow();
+            //Game.UI.TestWindow tt = new WindowBase() as Game.UI.TestWindow;
         }
     }
 
     /// <summary>
     /// WindowsBase编辑类
     /// </summary>
-    [CustomEditor( typeof( WindowBase ) )]//指定当WindowBase的GameObject选中时执行以下编辑器脚本，
+    [CustomEditor( typeof( WindowBase) )]//指定当WindowBase的GameObject选中时执行以下编辑器脚本，
     //[System.Serializable]
     public class WindowBaseEditor : UnityEditor.Editor
     {
@@ -65,6 +73,12 @@ namespace AquilaFramework.EditorExtension
                 Undo.RecordObject( target, "tar changed" );
                 //EditorUtility.SetDirty( target );
             }
+        }
+
+        private void OnDisable ()
+        {
+            //离开的时候走一遍保存的流程
+            
         }
         #endregion
 
@@ -125,7 +139,8 @@ namespace AquilaFramework.EditorExtension
                 var inspectObj = new InspectorSerializObjct()
                 {
                     _serializObject = serialObj,
-                    _selectTypeIdx = index,
+                    _selectTypeIdx  = index,
+                    _objectNodePath = UITools.GetGameObjectChildPath(serialObj.GameObj),
                 };
                 _list.Add( inspectObj );
             }
@@ -142,9 +157,88 @@ namespace AquilaFramework.EditorExtension
         /// <summary>
         /// 保存文件
         /// </summary>
-        private void SaveFile ()
+        private void SaveFile (string filePath)
         {
+            //把老的删掉 重新生成
+            if (File.Exists( filePath ))
+                File.Delete( filePath );
 
+            var builder = new StringBuilder();
+            //var attBuilder = new StringBuilder("\t\t");
+            var fieldsInitStr = string.Empty;
+            using (var fs = File.Create( filePath ))
+            {
+                var sw = new StreamWriter( fs,encoding : Encoding.UTF8);
+                //using
+                builder.Append( "using UnityEngine;\n" );
+                builder.Append( "using AquilaFramework.Common.Tools;\n" );
+
+                //nameSpace
+                builder.Append( "namespace AquilaFramework.Common.UI\n{");
+
+                //class
+                builder.Append( $"\n\tpublic class {_className} : WindowBase\n" );
+                builder.Append( "\t{\n" );
+                //fields:
+                foreach (var item in _list)
+                {
+                    var serializedObj = item._serializObject;
+                    if (serializedObj is null || serializedObj.GameObj is null)
+                    {
+                        Log.Error("serializedObj is null");
+                        continue;
+                    }
+                    builder.Append( "\t\t#region fields\n" );
+                    builder.Append($"\t\tprivate {serializedObj.Type} { serializedObj.Name };\n");
+                    builder.Append( $"\t\t{GetFieldAttrName( serializedObj.Name )} => {serializedObj.Name}" );
+                    builder.Append( "\n\t\t#endregion\n\n" );
+                    //attLst.Add( $"{ GetFieldAttrName( serializedObj.Name ) } => {serializedObj.Name};\n" );
+
+                    //#todo
+                    //引用获取没有什么好的方案，暂时想到的是保存节点引用路径名
+                    fieldsInitStr += $"\t\t\t{serializedObj.Name} = UITools.GetComponent<{serializedObj.Type}>({serializedObj.Name},{item._objectNodePath});\n";
+                }
+                //reference init
+                builder.Append( "\t\tpublic override void Init()\n" );
+                builder.Append( "\t\t{\n" );
+                builder.Append( fieldsInitStr );
+                builder.Append( "\t\t}" );
+
+                builder.Append( "\n\t}" ); 
+                builder.Append( "\n}" );
+
+                sw.Write( builder.ToString() );
+                sw.Flush();
+                sw.Close();
+
+            }
+        }
+
+        /// <summary>
+        /// 处理字段对应的属性名
+        /// </summary>
+        private string GetFieldAttrName (string source)
+        {
+            //var firstChar = source[0];
+            //if (firstChar >= 'A' && firstChar <= 'Z')
+            //{
+            //    firstChar = (char)(firstChar | 0x20);
+            //    source = $"{firstChar}{}"
+            //}
+
+            //if (!source.StartsWith( "_" ))
+            //    source = $"_{source}";
+
+            //return source;
+            return $"m_{source}";
+        }
+
+        /// <summary>
+        /// 写入类
+        /// </summary>
+        private void WriteClass ()
+        {
+            
         }
         #endregion
 
@@ -270,9 +364,14 @@ namespace AquilaFramework.EditorExtension
             if (GUILayout.Button( "SaveFile" ))
             {
                 SaveFileDialog dlg = new SaveFileDialog();
-                dlg.Filter = $"{_filePath}|*.cs";
-                if (dlg.ShowDialog() == DialogResult.Yes)
+                dlg.Filter = "|*.cs";
+                if (dlg.ShowDialog() == DialogResult.OK)
                 {
+                    var uiLogicPath = $@"{UnityEngine.Application.dataPath}/UI";
+                    if (!Directory.Exists(uiLogicPath))
+                        Directory.CreateDirectory( uiLogicPath );
+
+                    SaveFile(dlg.FileName);
                 }
                 //reset filePath;
             }

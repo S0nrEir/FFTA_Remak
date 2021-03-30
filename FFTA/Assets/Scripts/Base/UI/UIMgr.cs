@@ -23,10 +23,16 @@ namespace Game.Common.UI
         /// 加载新UI
         /// </summary>
         private static UIBase LoadUI<T, W> (UIIDEnum id, UIParam param = null) where T : UIBase, new()//todo不觉得这传泛型的方式是一种好的处理方式
-                                                                               where W : WindowBase
+                                                                               where W : WindowBase,new()
         {
             var newUI = new T();
             return newUI.Init<W>( param ) ? newUI : null;
+        }
+
+        private static UIBase LoadUI<T> (UIIDEnum id,UIParam param = null) where T : UIBase,new()
+        {
+            var newUI = new T();
+            return newUI.Init( param ) ? newUI : null;
         }
 
         /// <summary>
@@ -91,7 +97,7 @@ namespace Game.Common.UI
         /// 加载并显示一个UI实例
         /// </summary>
         public static void ShowUI<T,W> (UIIDEnum uiID,UIParam param = null) where T : UIBase, new()
-                                                                            where W:WindowBase
+                                                                            where W:WindowBase,new()
         {
             //检查缓存队列里有没有已经打开的此类UI实例
             var ui = GetFromCache<T>( uiID );
@@ -146,7 +152,7 @@ namespace Game.Common.UI
         /// 加载并显示一个UI实例
         /// </summary>
         public static void ShowUI<T,W> (int id, UIParam param = null) where T : UIBase, new()
-                                                                      where W:WindowBase
+                                                                      where W:WindowBase,new()
         {
             ShowUI<T,W>( (UIIDEnum)id, param );
         }

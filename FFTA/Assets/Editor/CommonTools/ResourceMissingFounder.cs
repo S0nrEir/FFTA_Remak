@@ -210,19 +210,19 @@ namespace AquilaFramework.EditorExtension
             }
 
             if (IsResourceRefMissing<MeshRenderer>( prefab ))
-                res += $"MeshRender Missing:{GetGameObjectFullPath( prefab )},\n文件路径:{path}\n\n";
+                res += $"MeshRender Missing:{UITools.GetGameObjectFullPath( prefab )},\n文件路径:{path}\n\n";
 
             if (IsResourceRefMissing<SkinnedMeshRenderer>( prefab ))
-                res += $"SkinnedMesh Missing:{GetGameObjectFullPath( prefab )},\n文件路径:{path}\n\n";
+                res += $"SkinnedMesh Missing:{UITools.GetGameObjectFullPath( prefab )},\n文件路径:{path}\n\n";
 
             if (IsResourceRefMissing<Animation>( prefab ))
-                res += $"AnimClip Missing:{GetGameObjectFullPath( prefab )},\n文件路径：{path}\n\n";
+                res += $"AnimClip Missing:{UITools.GetGameObjectFullPath( prefab )},\n文件路径：{path}\n\n";
 
             if (IsResourceRefMissing<Animator>( prefab ))
-                res += $"Animator Missing:{GetGameObjectFullPath( prefab )}，\n文件路径:{path}\n\n";
+                res += $"Animator Missing:{UITools.GetGameObjectFullPath( prefab )}，\n文件路径:{path}\n\n";
 
             if (IsResourceRefMissing<ParticleSystemRenderer>( prefab ))
-                res += $"Particle Missing:{GetGameObjectFullPath( prefab )}，\n文件路径:{path}\n\n";
+                res += $"Particle Missing:{UITools.GetGameObjectFullPath( prefab )}，\n文件路径:{path}\n\n";
 
             return res;
         }
@@ -298,18 +298,18 @@ namespace AquilaFramework.EditorExtension
         /// <summary>
         /// 获取GameObject的全路径
         /// </summary>
-        private static string GetGameObjectFullPath (GameObject prefab)
-        {
-            var temp = prefab;
-            var path = temp.name;
-            while (temp.transform.parent != null)
-            {
-                path = $"{temp.transform.parent.gameObject.name}/{path}";
-                temp = temp.transform.parent.gameObject;
-            }
+        //private static string GetGameObjectFullPath (GameObject prefab)
+        //{
+        //    var temp = prefab;
+        //    var path = temp.name;
+        //    while (temp.transform.parent != null)
+        //    {
+        //        path = $"{temp.transform.parent.gameObject.name}/{path}";
+        //        temp = temp.transform.parent.gameObject;
+        //    }
 
-            return path;
-        }
+        //    return path;
+        //}
         #endregion
 
         #region fields
