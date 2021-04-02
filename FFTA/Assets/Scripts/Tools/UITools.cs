@@ -55,6 +55,42 @@ namespace AquilaFramework.Common.Tools
         }
 
         /// <summary>
+        /// 返回带根节点的GameObject全路径
+        /// </summary>
+        public static string GetGameObjectChildPath (GameObject tar, GameObject root)
+        {
+            if (tar == root)
+                return string.Empty;
+
+            var pathStr = string.Empty;
+            //向父级寻找直到找到root或没有父节点为止
+
+            var temp = tar;
+            var path = temp.name;
+            var id = temp.GetInstanceID();
+            while (temp.transform.parent != null && temp != root)
+            {
+                path = $"{temp.transform.parent.gameObject.name}/{path}";
+                temp = temp.transform.parent.gameObject;
+            }
+
+            var fullPathArr = path.Split( '/' );
+            var len = fullPathArr.Length;
+            path = string.Empty;
+
+            var last = len - 1;
+            for (int i = 1; i < len; i++)
+            {
+                if (i == last)
+                    path += $"{fullPathArr[i]}";
+                else
+                    path += $"{fullPathArr[i]}/";
+            }
+
+            return path;
+        }
+
+        /// <summary>
         /// 设置UI实例到指定的UI节点下
         /// </summary>
         public static void SetToUIRoot (UI.UIBase ui)

@@ -56,10 +56,7 @@ namespace AquilaFramework.Common.UI
             ResetTransform();
 
             Window = new T();
-            //Window = UIGameObject.GetComponent<T>();
-            Window?.Init(UIGameObject);
-            //Window ??= UIGameObject.GetComponent<T>();
-
+            Window?.Init();
 
             return true;
         }

@@ -64,10 +64,10 @@ namespace AquilaFramework.EditorExtension
             base.OnInspectorGUI();
 
             RefreshTarget();
+            DrawReferenceButton();
             //DrawFileTextField();
             DrawObjectPicker();
             DrawFilePathField();
-            DrawReferenceButton();
             if (GUI.changed)
             {
                 Undo.RecordObject( target, "tar changed" );
@@ -134,13 +134,18 @@ namespace AquilaFramework.EditorExtension
                 if (go is null || string.IsNullOrEmpty( type ) || string.IsNullOrEmpty( name ))
                     continue;
 
+
                 var serialObj = new WindowInspectorObj( go.objectReferenceValue as GameObject, type, name );
                 var index = GetSelectedIndex( serialObj.Type, GetGameobjetsCompTypes( serialObj.GameObj ) );
+
+                var currSelected = Selection.objects[0];
+                var temp = currSelected as GameObject;
+
                 var inspectObj = new InspectorSerializObjct()
                 {
                     _serializObject = serialObj,
                     _selectTypeIdx  = index,
-                    _objectNodePath = UITools.GetGameObjectChildPath(serialObj.GameObj),
+                    _objectNodePath = UITools.GetGameObjectChildPath(serialObj.GameObj,temp),
                 };
                 _list.Add( inspectObj );
             }
@@ -192,11 +197,10 @@ namespace AquilaFramework.EditorExtension
                     builder.Append($"\t\tprivate {serializedObj.Type} { serializedObj.Name };\n");
                     builder.Append( $"\t\t{GetFieldAttrName( serializedObj.Name )} => {serializedObj.Name}" );
                     builder.Append( "\n\t\t#endregion\n\n" );
-                    //attLst.Add( $"{ GetFieldAttrName( serializedObj.Name ) } => {serializedObj.Name};\n" );
 
                     //#todo
                     //引用获取没有什么好的方案，暂时想到的是保存节点引用路径名
-                    fieldsInitStr += $"\t\t\t{serializedObj.Name} = UITools.GetComponent<{serializedObj.Type}>({serializedObj.Name},{item._objectNodePath});\n";
+                    fieldsInitStr += $"\t\t\t{serializedObj.Name} = UITools.GetComponent<{serializedObj.Type}>({serializedObj.Name},\"{item._objectNodePath}\");\n";
                 }
                 //reference init
                 builder.Append( "\t\tpublic override void Init()\n" );
@@ -283,6 +287,7 @@ namespace AquilaFramework.EditorExtension
 
                     windowObj.SetGo( go );
                     var typeStr = GetGameobjetsCompTypes( windowObj.GameObj );
+                Debug.Log( $"i;{i},cnt:{cnt}" );
                     windowObj.Set( go, typeStr[_list[i]._selectTypeIdx], go.name );//popup的value
 
                     sObj.ApplyModifiedProperties();
@@ -431,6 +436,10 @@ namespace AquilaFramework.EditorExtension
                     type.stringValue = sObj._serializObject.Type;
                     name.stringValue = sObj._serializObject.Name;
                 }
+                //写入类名
+                var className = serializedObject.FindProperty( "_className" );
+                className.stringValue = _className;
+
                 //Undo.RecordObject( target, "tar changed" );
                 serializedObject.ApplyModifiedProperties();
             }

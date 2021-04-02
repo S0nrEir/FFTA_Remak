@@ -46,12 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _components:
   - go: {fileID: 2867340823341315154}
-    type: GameObject
-    name: GameObject
+    type: Animator
+    name: animator
   - go: {fileID: 0}
     type: 
     name: 
-  _className: WindowBaseClass
+  _className: TestUIWindow
   _classFilePath: classFilePath
   _uiID: 999
 --- !u!1 &2867340823341315154
