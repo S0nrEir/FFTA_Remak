@@ -26,6 +26,12 @@
         public delegate void Void_Void_Del ();
 
         /// <summary>
+        /// 参数：无;
+        /// 返回值：bool
+        /// </summary>
+        public delegate bool Bool_Void_Del ();
+
+        /// <summary>
         /// 参数：object[]
         /// 返回值：无
         /// </summary>

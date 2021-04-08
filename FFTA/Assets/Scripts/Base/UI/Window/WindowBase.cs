@@ -36,6 +36,7 @@ namespace AquilaFramework.Common.UI
         public string Name => name;
 
         public string Type => type;
+
     }
 
     /// <summary>
@@ -58,12 +59,12 @@ namespace AquilaFramework.Common.UI
         /// <summary>
         /// 生成保存的类名
         /// </summary>
-        [HideInInspector][SerializeField] private string _className = "WindowBaseClass";
+        [HideInInspector][SerializeField] private string _className = "";
 
         /// <summary>
         /// 类文件路径
         /// </summary>
-        [HideInInspector] [SerializeField] private string _classFilePath = "classFilePath";
+        //[HideInInspector] [SerializeField] private string _classFilePath = "";
 
         #endregion
 
@@ -93,6 +94,22 @@ namespace AquilaFramework.Common.UI
         void Start () => _onStartDel?.Invoke();
         void OnDisable () => _onDisableDel?.Invoke();
         void OnDestroy () => _onDestryDel?.Invoke();
+
+        #endregion
+
+        #region override
+
+        public virtual void Init ()
+        {
+        }
+
+        //public virtual void Init (GameObject uiBaseGameObject)
+        //{ 
+        //}
+
+        public virtual void DeInit()
+        {
+        }
 
         #endregion
 
