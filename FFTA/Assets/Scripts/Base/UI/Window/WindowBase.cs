@@ -64,7 +64,7 @@ namespace AquilaFramework.Common.UI
         /// <summary>
         /// 类文件路径
         /// </summary>
-        [HideInInspector] [SerializeField] private string _classFilePath = "";
+        //[HideInInspector] [SerializeField] private string _classFilePath = "";
 
         #endregion
 

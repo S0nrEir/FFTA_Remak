@@ -64,15 +64,15 @@ namespace AquilaFramework.EditorExtension
             base.OnInspectorGUI();
 
             RefreshTarget();
-            DrawReferenceButton();
             //DrawFileTextField();
             DrawObjectPicker();
+            DrawReferenceButton();
             DrawFilePathField();
-            if (GUI.changed)
-            {
-                Undo.RecordObject( target, "tar changed" );
-                //EditorUtility.SetDirty( target );
-            }
+            //if (GUI.changed)
+            //{
+            //    Undo.RecordObject( target, "tar changed" );
+            //    //EditorUtility.SetDirty( target );
+            //}
         }
 
         private void OnDisable ()
@@ -99,7 +99,7 @@ namespace AquilaFramework.EditorExtension
         {
             //load className
             _className = serializedObject.FindProperty( "_className" ).stringValue;
-            _filePath = serializedObject.FindProperty( "_classFilePath" ).stringValue;
+            //_filePath = serializedObject.FindProperty( "_classFilePath" ).stringValue;
 
             //load object reference
             _referenceList = serializedObject.FindProperty( "_components" );
@@ -184,7 +184,9 @@ namespace AquilaFramework.EditorExtension
                 //class
                 builder.Append( $"\n\tpublic class {_className} : WindowBase\n" );
                 builder.Append( "\t{\n" );
+                
                 //fields:
+                builder.Append( "\t\t#region fields\n" );
                 foreach (var item in _list)
                 {
                     var serializedObj = item._serializObject;
@@ -193,15 +195,15 @@ namespace AquilaFramework.EditorExtension
                         Log.Error("serializedObj is null");
                         continue;
                     }
-                    builder.Append( "\t\t#region fields\n" );
-                    builder.Append($"\t\tprivate {serializedObj.Type} { serializedObj.Name };\n");
-                    builder.Append( $"\t\t{GetFieldAttrName( serializedObj.Name )} => {serializedObj.Name}" );
-                    builder.Append( "\n\t\t#endregion\n\n" );
+                    builder.Append($"\n\t\tprivate {serializedObj.Type} { serializedObj.Name };\n");
+                    builder.Append( $"\t\tpublic {serializedObj.Type} {GetFieldAttrName( serializedObj.Name )} => {serializedObj.Name}" );
 
                     //#todo
                     //引用获取没有什么好的方案，暂时想到的是保存节点引用路径名
                     fieldsInitStr += $"\t\t\t{serializedObj.Name} = UITools.GetComponent<{serializedObj.Type}>({serializedObj.Name},\"{item._objectNodePath}\");\n";
                 }
+                builder.Append( "\n\t\t#endregion\n\n" );
+
                 //reference init
                 builder.Append( "\t\tpublic override void Init()\n" );
                 builder.Append( "\t\t{\n" );
@@ -214,7 +216,6 @@ namespace AquilaFramework.EditorExtension
                 sw.Write( builder.ToString() );
                 sw.Flush();
                 sw.Close();
-
             }
         }
 
@@ -287,7 +288,7 @@ namespace AquilaFramework.EditorExtension
 
                     windowObj.SetGo( go );
                     var typeStr = GetGameobjetsCompTypes( windowObj.GameObj );
-                Debug.Log( $"i;{i},cnt:{cnt}" );
+                    Debug.Log( $"i;{i},cnt:{cnt}" );
                     windowObj.Set( go, typeStr[_list[i]._selectTypeIdx], go.name );//popup的value
 
                     sObj.ApplyModifiedProperties();
@@ -356,8 +357,8 @@ namespace AquilaFramework.EditorExtension
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal();
 
-            EditorGUILayout.LabelField( "filePath:" ,new GUILayoutOption[] { GUILayout.Width(50) } );
-            _filePath = EditorGUILayout.TextField( _filePath );
+            //EditorGUILayout.LabelField( "filePath:" ,new GUILayoutOption[] { GUILayout.Width(50) } );
+            //_filePath = EditorGUILayout.TextField( _filePath );
 
             //检查类名
             if (string.IsNullOrEmpty( _className ) || _className.Contains( " " ))
@@ -402,7 +403,11 @@ namespace AquilaFramework.EditorExtension
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button( " + " ))
-                _list.Add( new InspectorSerializObjct() );
+            {
+                var obj = new InspectorSerializObjct();
+                obj._selectTypeIdx = 0;
+                _list.Add( obj );
+            }
 
             if (GUILayout.Button( " - " ))
             {
