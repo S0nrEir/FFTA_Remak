@@ -12,16 +12,16 @@ namespace AquilaFramework.ObjectPool
         /// <summary>
         /// 清理并释放该对象池
         /// </summary>
-        public void Dispose ();
+        void Dispose ();
 
         /// <summary>
         /// 创建池
         /// </summary>
-        public void Create ();
+        void Create ();
 
         /// <summary>
         /// 释放所有池中未使用的object
         /// </summary>
-        public void ReleaseAllUnused ();
+        void ReleaseAllUnused ();
     }
 }
