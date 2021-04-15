@@ -286,7 +286,7 @@ namespace AquilaFramework.EditorExtension
                         continue;
 
                     var refString = (string)refMethod.GetGetMethod( true ).Invoke( elmt, null );
-                    if (refString.StartsWith( "Miss" ))
+                    if (refString.StartsWith( "Missing" ))
                         return true;
                 }
             }
