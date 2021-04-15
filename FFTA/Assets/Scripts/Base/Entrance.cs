@@ -1,7 +1,4 @@
-﻿using AquilaFramework.Common;
-using AquilaFramework.Common.Define;
-using AquilaFramework.Common.Tools;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Entrance : MonoBehaviour
 {
@@ -11,13 +8,16 @@ public class Entrance : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Log.SetLogOpen( _isOpenLog );
+        AquilaFramework.Common.Tools.Log.SetLogOpen( _isOpenLog );
 
         //这里是为了避免懒加载获取其中的某些对象时出现“场景内GameObject过多”导致的查找消耗问题
-        GlobalInstance.Init();
+        AquilaFramework.Common.Define.GlobalInstance.Init();
 
         //frame init
-        FrameController.I.EnsureInit();
+        AquilaFramework.Common.FrameController.I.EnsureInit();
+
+        //objectPoolInit
+        AquilaFramework.ObjectPool.ObjectPoolMgr.I.Init();
 
         DontDestroyOnLoad( gameObject );
     }

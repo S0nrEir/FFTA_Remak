@@ -79,7 +79,7 @@ namespace AquilaFramework.DataStruct
     /// <summary>
     /// 对于二叉树做子节点比较时的自定义委托，可基于此定义自定义的二叉树左右子节点比较函数
     /// </summary>
-    public delegate TreeChildNodeDiffEnum TreeNodeDiffDel<T> (TreeNode<T> node);
+    public delegate TreeChildNodeDiffEnum TreeNodeDiffDel<T>(TreeNode<T> node);
 
     /// <summary>
     /// 二叉树子节点自定义比较返回结果
@@ -88,6 +88,5 @@ namespace AquilaFramework.DataStruct
     {
         Left,
         Right,
-        Me,
     }
 }

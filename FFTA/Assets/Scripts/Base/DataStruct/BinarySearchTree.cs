@@ -11,7 +11,6 @@ namespace AquilaFramework.DataStruct
         public BinarySearchTree (TreeNode<T> node , TreeNodeDiffDel<T> del) : base( node )
         {
             _diffDel = del;
-
         }
 
         public BinarySearchTree (List<TreeNode<T>> list) : base( list )
@@ -25,12 +24,16 @@ namespace AquilaFramework.DataStruct
         {
             if (_diffDel is null)
                 return;
+
+
         }
 
         public override void Del (T item)
         {
             if (_diffDel is null)
                 return;
+
+
         }
 
         public override void Add (T item, TreeNodeDiffDel<T> del)
@@ -60,7 +63,20 @@ namespace AquilaFramework.DataStruct
         /// </summary>
         private TreeNode<T> GetLeft ()
         {
-            return null;
+            if (_diffDel is null)
+                return null;
+
+            if (Root is null)
+                return null;
+
+            var tempRoot = Root;
+            while (tempRoot != null)
+            {
+                if (tempRoot.Left != null &&_diffDel( tempRoot ) == TreeChildNodeDiffEnum.Left)
+                    tempRoot = tempRoot.Left;
+            }
+
+            return tempRoot;
         }
 
         /// <summary>
@@ -68,7 +84,20 @@ namespace AquilaFramework.DataStruct
         /// </summary>
         private TreeNode<T> GetRight ()
         {
-            return null;
+            if (_diffDel is null)
+                return null;
+
+            if (Root is null)
+                return null;
+
+            var tempRoot = Root;
+            while (tempRoot != null)
+            {
+                if (tempRoot.Right != null && _diffDel( tempRoot ) == TreeChildNodeDiffEnum.Right)
+                    tempRoot = tempRoot.Right;
+            }
+
+            return tempRoot;
         }
 
         private TreeNodeDiffDel<T> _diffDel = null;

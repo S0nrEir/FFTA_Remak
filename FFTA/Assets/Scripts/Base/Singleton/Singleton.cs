@@ -6,6 +6,23 @@
     /// </summary>
     public class Singleton<T> where T:class,new()
     {
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public virtual void Init ()
+        {
+            
+        }
+
+        /// <summary>
+        /// 反初始化
+        /// </summary>
+        public virtual void DeInit ()
+        {
+            
+        }
+
         /// <summary>
         /// 单例字段
         /// </summary>

@@ -295,6 +295,11 @@ namespace AquilaFramework.Common
         /// </summary>
         public void EnsureInit ()
         {
+            Init();
+        }
+
+        public override void Init ()
+        {
             if (Inited)
                 return;
 
@@ -342,7 +347,7 @@ namespace AquilaFramework.Common
         /// <summary>
         /// 反初始化
         /// </summary>
-        public void DeInit ()
+        public override void DeInit ()
         {
             CleanUp();
             //callBack
