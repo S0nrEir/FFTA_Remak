@@ -5,6 +5,8 @@
 ·.NetFramework Ver:4.7.1  
 ·.NetCore Ver:5.0.101  
 
+不定期施工中............
+
 另基于此框架开发了GBA版本的FFTA（最终幻想战略版）复刻版
 
 # 关于FFTA复刻：
