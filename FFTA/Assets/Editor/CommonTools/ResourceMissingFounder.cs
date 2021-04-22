@@ -140,7 +140,7 @@ namespace AquilaFramework.EditorExtension
             var test = _pathList.ToArray();
             var guidArr = AssetDatabase.FindAssets( "t:Prefab", _pathList.ToArray() );
             List<string> resultLst = new List<string>();
-            Debug.Log( "资源数量:" + guidArr.Length );
+            Log.Info( "resource count:" + guidArr.Length );
 
             foreach (var guid in guidArr)
             {
@@ -158,11 +158,11 @@ namespace AquilaFramework.EditorExtension
             }
 
             if (resultLst.Count == 0)
-                Debug.Log( "<color=green>检查结束，未检查到相应目录下丢失材质引用的meshRender或skinMesh</color>" );
+                Log.Msg( "<color=green>检查结束，未检查到相应目录下丢失材质引用的meshRender或skinMesh</color>" );
             else
             {
                 PrintResult2DeskTop( resultLst, out var fileName );
-                Debug.Log( $"<color=green>检查结束，已将检查结果输出至桌面{fileName}文件</color>" );
+                Log.Msg( $"<color=green>检查结束，已将检查结果输出至桌面{fileName}文件</color>" );
             }
         }
 
