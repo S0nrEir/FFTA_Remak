@@ -1,4 +1,5 @@
-﻿using AquilaFramework.ExceptionEx;
+﻿using AquilaFramework.Common.Tools;
+using AquilaFramework.ExceptionEx;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace AquilaFramework.ObjectPool
     /// <summary>
     /// 对象池接口，任何对象池的实现都需实现此接口
     /// </summary>
-    public abstract class ObjectPoolBase<T> : IObjectPool 
+    public abstract class ObjectPoolBase<T> : IObjectPool where T : class, new()
     {
         /// <summary>
         /// 对象池存储器
@@ -17,16 +18,21 @@ namespace AquilaFramework.ObjectPool
         private Queue<T> _pool;
 
         /// <summary>
+        /// 保存对象回收状态的map，如果对象被获取，则标记为false，在池中为true
+        /// </summary>
+        private Dictionary<T, bool> _objectMap;
+
+        /// <summary>
         /// 对象创建回调
         /// </summary>
         public delegate void PoolHandler (T obj);
 
-        protected PoolHandler _onGeneDel = null;
+        protected PoolHandler _onGenDel = null;
 
         /// <summary>
         /// 销毁对象回调
         /// </summary>
-        protected PoolHandler _onDisDel = null;
+        protected PoolHandler _onResycleDel = null;
 
         /// <summary>
         /// 池中对象释放间隔（秒）
@@ -48,17 +54,13 @@ namespace AquilaFramework.ObjectPool
         /// </summary>
         public ObjectPoolBase (PoolHandler onGenDel, PoolHandler onDisDel)
         {
-            _onGeneDel = onGenDel;
-            _onDisDel = onDisDel;
-            Capacity = DEFAULT_CAPACITY;
-            ExpireTime = DEFAULT_EXPIRE_TIME;
-            ReleaseTime = DEFAULT_RELEASE_TIME;
+
         }
 
         public ObjectPoolBase () 
         {
-            _onGeneDel = null;
-            _onDisDel = null;
+            _onGenDel = null;
+            _onResycleDel = null;
         }
 
         /// <summary>
@@ -76,8 +78,8 @@ namespace AquilaFramework.ObjectPool
             Capacity = capacity;
             ExpireTime = expireTime;
             ReleaseTime = releaseTime;
-            _onGeneDel = onGenDel;
-            _onDisDel = onDisDelint;
+            _onGenDel = onGenDel;
+            _onResycleDel = onDisDelint;
         }
 
         /// <summary>
@@ -103,12 +105,69 @@ namespace AquilaFramework.ObjectPool
 
         public void Create ()
         {
-            throw new AquilaException( "" );
+            Capacity = DEFAULT_CAPACITY;
+            ExpireTime = DEFAULT_EXPIRE_TIME;
+            ReleaseTime = DEFAULT_RELEASE_TIME;
+            _onGenDel = null;
+            _onResycleDel = null;
+
+            _pool = new Queue<T>( DEFAULT_CAPACITY );
+            _objectMap = new Dictionary<T, bool>( DEFAULT_CAPACITY );
         }
+
+        /// <summary>
+        /// 获取对象
+        /// </summary>
+        public T Get()
+        {
+            T obj;
+            if (_pool.Count == 0)
+            {
+                obj = new T();
+                _pool.Enqueue( obj );
+                _objectMap.Add( obj, false );
+
+                _onGenDel?.Invoke( obj );
+
+                return obj;
+            }
+
+            obj = _pool.Dequeue();
+            if (!_objectMap.ContainsKey( obj ))
+            {
+                Log.Warnning($"ObjectMap does not have Object:{obj}");
+                return null;
+            }
+            _objectMap[obj] = false;
+
+            return obj;
+        }
+
+
 
         public void ReleaseAllUnused ()
         {
             throw new AquilaException( "" );
+        }
+
+        /// <summary>
+        /// 设置对象的引用状态
+        /// </summary>
+        private void SetObjectReferenceState(T obj,bool useState)
+        {
+            if (obj is null)
+                throw new AquilaException( "SetObjectRefereceState ---> obj is null" );
+
+            if (_objectMap.ContainsKey( obj ))
+                _objectMap[obj] = useState;
+        }
+
+        /// <summary>
+        /// 回收
+        /// </summary>
+        public void Recycle ()
+        {
+            
         }
         #endregion
     }

@@ -43,7 +43,7 @@ namespace AquilaFramework.ObjectPool
         /// <summary>
         /// 获取指定类型的ObjectPool，拿不到返回空
         /// </summary>
-        public IObjectPool GetObjectPool<T> ()
+        public IObjectPool GetObjectPool<T> () where T : IObjectPool
         {
             var type = typeof( T );
             if (!_objectPoolDic.ContainsKey( type ))
