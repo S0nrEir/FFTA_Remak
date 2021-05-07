@@ -23,5 +23,30 @@ namespace AquilaFramework.ObjectPool
         /// 释放所有池中未使用的object
         /// </summary>
         void ReleaseAllUnused ();
+
+        /// <summary>
+        /// 回收所有Object到池中
+        /// </summary>
+        void ResycleAll ();
+
+        /// <summary>
+        /// 设置对象池容量
+        /// </summary>
+        void SetCapacity (int capacity);
+
+        /// <summary>
+        /// 设置对象过期时间
+        /// </summary>
+        void SetExpireTime (float time);
+
+        /// <summary>
+        /// 设置回收间隔
+        /// </summary>
+        void SetReleaseTime (float time);
+
+        /// <summary>
+        /// 获取对象池存储对象类型
+        /// </summary>
+        System.Type GetObjectType ();
     }
 }
