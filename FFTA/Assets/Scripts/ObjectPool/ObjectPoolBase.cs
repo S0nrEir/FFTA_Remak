@@ -264,10 +264,8 @@ namespace AquilaFramework.ObjectPool
             _objectMap.Add( obj, defaultState );
         }
 
-        public Type GetObjectType ()
-        {
-            return typeof( T );
-        }
+        public System.Type GetObjectType () => typeof( T );
+
 
         #endregion
 

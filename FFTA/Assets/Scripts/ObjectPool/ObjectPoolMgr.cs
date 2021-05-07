@@ -1,7 +1,7 @@
 ﻿using AquilaFramework.Common;
 using AquilaFramework.Common.Tools;
 using System;
-using System.Collections;
+using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -76,7 +76,11 @@ namespace AquilaFramework.ObjectPool
             pool.SetExpireTime( expireTime );
             pool.SetReleaseTime( releaseTime );
 
-            var poolBase = pool as ObjectPoolBase<GameObject>;
+            var objType = pool.GetObjectType();
+            
+
+            //#todo 直接使用ObjectBase或继承自他的类型作为对象池而不需要类型转换
+            //var poolBase = pool as ObjectPoolBase<>;
             
             //pool.SetOnGenDel( onGenDel );
             //pool.SetOnResycleDel( onResycleDel );
