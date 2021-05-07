@@ -20,26 +20,35 @@ public class Entrance : MonoBehaviour
         FrameController.I.EnsureInit();
         ObjectPoolMgr.I.Init();
 
-        var pool = ObjectPoolMgr.I.CreateDefaultObjectPool<TestPool>
-            (
-               capacity: 5,
-               expireTime: 300f,
-               releaseTime: 30f,
-               onGenDel: null,
-               onResycleDel: null,
-               onReleaseDel: null
-            );
-
+        TestPool pool = ObjectPoolMgr.I.CreateDefaultObjectPoolTest<TestPool>();
         pool.Do();
     }
 
 }
 
-public class TestPool : ObjectPoolBase<GameObject>
+public class TestPool : ObjectPoolBaseTest<ObjectPoolItem>
 {
     public TestPool ()
     { }
 
     public void Do ()
     { }
+}
+
+public class ObjectPoolItem : IObject
+{
+    public void Gen ()
+    {
+        Log.Info("Gen");
+    }
+
+    public void Release ()
+    {
+        Log.Info( "Release" );
+    }
+
+    public void Resycle ()
+    {
+        Log.Info( "Resycle" );
+    }
 }

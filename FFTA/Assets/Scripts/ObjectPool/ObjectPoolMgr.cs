@@ -44,6 +44,18 @@ namespace AquilaFramework.ObjectPool
             return pool;
         }
 
+        public T CreateDefaultObjectPoolTest<T> () where T : class, IObjectPool ,new()
+        {
+            var pool = new T();
+            pool.SetCapacity( 64 );
+            pool.SetExpireTime( 300f );
+            pool.SetReleaseTime( 30f );
+
+
+
+            return pool;
+        }
+
         /// <summary>
         /// 创建默认的Auila框架实现的对象池，传入的回调禁止使用匿名函数
         /// </summary>

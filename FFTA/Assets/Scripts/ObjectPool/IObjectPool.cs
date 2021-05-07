@@ -49,4 +49,5 @@ namespace AquilaFramework.ObjectPool
         /// </summary>
         System.Type GetObjectType ();
     }
+
 }
