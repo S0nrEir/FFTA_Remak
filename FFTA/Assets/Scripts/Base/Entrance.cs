@@ -1,4 +1,8 @@
 ﻿using UnityEngine;
+using AquilaFramework.Common;
+using AquilaFramework.Common.Define;
+using AquilaFramework.Common.Tools;
+using AquilaFramework.ObjectPool;
 
 public class Entrance : MonoBehaviour
 {
@@ -8,18 +12,43 @@ public class Entrance : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        AquilaFramework.Common.Tools.Log.SetLogOpen( _isOpenLog );
+        DontDestroyOnLoad( gameObject );
+        Log.SetLogOpen( _isOpenLog );
 
         //这里是为了避免懒加载获取其中的某些对象时出现“场景内GameObject过多”导致的查找消耗问题
-        AquilaFramework.Common.Define.GlobalInstance.Init();
+        GlobalInstance.Init();
+        FrameController.I.EnsureInit();
+        ObjectPoolMgr.I.Init();
 
-        //frame init
-        AquilaFramework.Common.FrameController.I.EnsureInit();
-
-        //objectPoolInit
-        AquilaFramework.ObjectPool.ObjectPoolMgr.I.Init();
-
-        DontDestroyOnLoad( gameObject );
+        TestPool pool = ObjectPoolMgr.I.CreateDefaultObjectPoolTest<TestPool>();
+        pool.Do();
     }
 
+}
+
+public class TestPool : ObjectPoolBaseTest<ObjectPoolItem>
+{
+    public TestPool ()
+    { }
+
+    public void Do ()
+    { }
+}
+
+public class ObjectPoolItem : IObject
+{
+    public void Gen ()
+    {
+        Log.Info("Gen");
+    }
+
+    public void Release ()
+    {
+        Log.Info( "Release" );
+    }
+
+    public void Resycle ()
+    {
+        Log.Info( "Resycle" );
+    }
 }

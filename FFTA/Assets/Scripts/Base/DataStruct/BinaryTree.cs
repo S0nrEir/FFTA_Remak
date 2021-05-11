@@ -12,6 +12,8 @@ namespace AquilaFramework.DataStruct
             Root = root;
         }
 
+
+
         /// <summary>
         /// 构造list转tree
         /// </summary>
