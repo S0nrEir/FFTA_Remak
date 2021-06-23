@@ -323,8 +323,13 @@ namespace AquilaFramework.EditorExtension
             var len = compArr.Length;
             var typeArr = new string[len + 1];
             typeArr[0] = typeof( GameObject ).Name;//默认第0项是GameObject
-            for (int i = 1; i < len; i++)
-                typeArr[i] = compArr[i].GetType().Name;
+            for (int i = 0; i < len; i++)
+            {
+                if (compArr[i] == null)
+                    continue;
+
+                typeArr[i + 1] = compArr[i].GetType().Name;
+            }
 
             return typeArr;
         }
