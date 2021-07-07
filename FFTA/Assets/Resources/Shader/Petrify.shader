@@ -68,7 +68,7 @@ Shader "Buff/Petrify"
                     fixed4 color = tex2D(_MainTex,o.uv_1);
                     
                     //对应的rgb通道置灰
-                    float grey = dot(color.rgb , (0.21256 , 0.7152 , 0.0722));
+                    float grey = dot(color.rgb, float3(0.21256 , 0.7152 , 0.0722)); 
                     color.rgb = lerp(color.rgb , grey , _PetrifyFac);
 
                     //石化纹理采样，算出真正的灰度
